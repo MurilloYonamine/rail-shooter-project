@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace RAIL_SHOOTER.PLAYER
 {
-    public class PlayerAim : MonoBehaviour
+    public class PlayerAim : MonoBehaviour // TODO: remove monobehaviour
     {
         private InputReader m_inputReader;
 
