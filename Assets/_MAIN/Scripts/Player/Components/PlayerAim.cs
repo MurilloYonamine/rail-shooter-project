@@ -1,22 +1,23 @@
+using System;
 using RAIL_SHOOTER.PLAYER.INPUT;
 using UnityEngine;
 
 namespace RAIL_SHOOTER.PLAYER
 {
-    public class PlayerAim : MonoBehaviour // TODO: remove monobehaviour
+    [Serializable]
+    public class PlayerAim : PlayerComponent
     {
         private InputReader _inputReader;
-
         [SerializeField] private bool _hideCursor = true;
         [SerializeField] private float _sensitivity = 2.0f;
 
         [SerializeField] private RectTransform _crosshair;
 
-        private void Awake()
+        public override void OnAwake()
         {
             _inputReader = new InputReader();
         }
-        private void Start()
+        public override void OnStart()
         {
             if (_hideCursor)
             {
@@ -24,12 +25,12 @@ namespace RAIL_SHOOTER.PLAYER
                 Cursor.lockState = CursorLockMode.Locked;
             }
         }
-        private void OnEnable()
+        public override void OnEnable()
         {
             _inputReader.OnEnable();
             InputReader.OnLookInput += HandleLookInput;
         }
-        private void OnDisable()
+        public override void OnDisable()
         {
             _inputReader.OnDisable();
             InputReader.OnLookInput -= HandleLookInput;

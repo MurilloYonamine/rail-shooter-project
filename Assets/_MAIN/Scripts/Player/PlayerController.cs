@@ -1,3 +1,4 @@
+using System;
 using RAIL_SHOOTER.RAILS;
 using UnityEngine;
 
@@ -5,51 +6,51 @@ namespace RAIL_SHOOTER.PLAYER
 {
     public class PlayerController : MonoBehaviour
     {
+        [Header("Components")]
+        private PlayerComponent[] _playerComponents;
         [SerializeField] private PlayerAim _playerAim;
+        [SerializeField] private PlayerMovement _playerMovement;
 
-        [Header("Rails")]
-        [SerializeField] private RailTrack _railTrack;
-        private int _currentRailIndex = 0;
-        private Transform _spawnPoint;
-
-        [SerializeField] private float _moveSpeed = 5.0f;
-
+        private void Awake()
+        {
+            _playerComponents = new PlayerComponent[]
+            {
+                _playerAim,
+                _playerMovement
+            };
+            ForEachComponent(component => component?.Initialize(this));
+            ForEachComponent(component => component?.OnAwake());
+        }
         private void Start()
         {
-            RailPoint railSpawnPoint = _railTrack.GetFirstRail();
-            _spawnPoint = railSpawnPoint.transform;
-
-            gameObject.transform.position = _spawnPoint.position;
-
-            railSpawnPoint.ActivateCamera(this.transform);
+            ForEachComponent(component => component?.OnStart());
         }
-        // TODO: move in a diffrente script
+        private void OnEnable()
+        {
+            ForEachComponent(component => component?.OnEnable());
+        }
+        private void OnDisable()
+        {
+            ForEachComponent(component => component?.OnDisable());
+        }
+        private void Update()
+        {
+            ForEachComponent(component => component?.OnUpdate());
+        }
         private void FixedUpdate()
         {
-            if(!_railTrack.HasNextRail(_currentRailIndex)) return;
+            ForEachComponent(component => component?.OnFixedUpdate());
+        }
+        private void LateUpdate()
+        {
+            ForEachComponent(component => component?.OnLateUpdate());
+        }
 
-            int nextRailIndex = _currentRailIndex + 1;
-            RailPoint nextRailPoint = _railTrack.GetRailPerIndex(nextRailIndex);
-
-            transform.position = Vector3.MoveTowards(
-                transform.position,
-                nextRailPoint.transform.position,
-                Time.deltaTime * _moveSpeed
-            );
-
-            float distance = Vector3.Distance(transform.position, nextRailPoint.transform.position);
-
-            if (distance <= 0.01f)
+        private void ForEachComponent(Action<PlayerComponent> componentAction)
+        {
+            for (int i = 0; i < _playerComponents.Length; i++)
             {
-                if (_railTrack.HasNextRail(_currentRailIndex))
-                {
-                    RailPoint currentRailPoint = _railTrack.GetRailPerIndex(_currentRailIndex);
-                    currentRailPoint.DeactivateCamera();
-
-                    _currentRailIndex++;
-
-                    nextRailPoint.ActivateCamera(this.transform);
-                }
+                componentAction(_playerComponents[i]);
             }
         }
     }

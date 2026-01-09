@@ -13,6 +13,8 @@ namespace RAIL_SHOOTER.RAILS
         [SerializeField] private Color _endColor = Color.magenta;
         [SerializeField] private Color _pauseColor = Color.yellow;
 
+        [field: SerializeField, Range(0.1f, 1.0f)] private float _radious = 0.15f;
+
         private CinemachineVirtualCamera _virtualCamera;
 
         public WaypointType Type { get => _waypointType; set => _waypointType = value; }
@@ -23,7 +25,7 @@ namespace RAIL_SHOOTER.RAILS
             _virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
             _virtualCamera?.gameObject.SetActive(false);
         }
-        private void OnDrawGizmos()
+        private void OnDrawGizmos() 
         {
             switch (_waypointType)
             {
@@ -35,7 +37,7 @@ namespace RAIL_SHOOTER.RAILS
 
             Gizmos.DrawSphere(
                 transform.position,
-                radius: 0.15f
+                radius: _radious
             );
         }
         public void ActivateCamera(Transform playerTransform)
@@ -44,7 +46,7 @@ namespace RAIL_SHOOTER.RAILS
             {
                 _virtualCamera.Follow = playerTransform;
                 _virtualCamera.LookAt = playerTransform;
-                _virtualCamera.transform.position = playerTransform.position;
+                _virtualCamera.transform.position = transform.position;
 
                 _virtualCamera.Priority = 20;
             }
