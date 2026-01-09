@@ -5,11 +5,14 @@ namespace RAIL_SHOOTER.RAILS
 {
     public class RailPoint : MonoBehaviour
     {
-        public enum WaypointType { Normal = 0, Spawn }
+        public enum WaypointType { Normal = 0, Spawn, End, Pause }
 
         [SerializeField] private WaypointType _waypointType = WaypointType.Normal;
-        [SerializeField] private Color _spawnColor = Color.yellow;
-        [SerializeField] private Color _normalColor = Color.green;
+        [SerializeField] private Color _normalColor = Color.white;
+        [SerializeField] private Color _spawnColor = Color.green;
+        [SerializeField] private Color _endColor = Color.magenta;
+        [SerializeField] private Color _pauseColor = Color.yellow;
+
         private CinemachineVirtualCamera _virtualCamera;
 
         public WaypointType Type { get => _waypointType; set => _waypointType = value; }
@@ -22,7 +25,13 @@ namespace RAIL_SHOOTER.RAILS
         }
         private void OnDrawGizmos()
         {
-            Gizmos.color = _waypointType == WaypointType.Spawn ? _spawnColor : _normalColor;
+            switch (_waypointType)
+            {
+                case WaypointType.Normal: Gizmos.color = _normalColor; break;
+                case WaypointType.Spawn: Gizmos.color = _spawnColor; break;
+                case WaypointType.End: Gizmos.color = _endColor; break;
+                case WaypointType.Pause: Gizmos.color = _pauseColor; break;
+            }
 
             Gizmos.DrawSphere(
                 transform.position,
@@ -33,8 +42,9 @@ namespace RAIL_SHOOTER.RAILS
         {
             if (_virtualCamera != null)
             {
-                //_virtualCamera.Follow = playerTransform;
+                _virtualCamera.Follow = playerTransform;
                 _virtualCamera.LookAt = playerTransform;
+                _virtualCamera.transform.position = playerTransform.position;
 
                 _virtualCamera.Priority = 20;
             }

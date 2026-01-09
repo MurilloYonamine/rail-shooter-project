@@ -559,8 +559,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _waypointType: 0
-  _spawnColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  _normalColor: {r: 0, g: 1, b: 0, a: 1}
+  _normalColor: {r: 1, g: 1, b: 1, a: 1}
+  _spawnColor: {r: 0, g: 1, b: 0, a: 1}
+  _endColor: {r: 1, g: 0, b: 1, a: 1}
+  _pauseColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1001 &108056128
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -800,8 +802,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _waypointType: 0
-  _spawnColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  _normalColor: {r: 0, g: 1, b: 0, a: 1}
+  _normalColor: {r: 1, g: 1, b: 1, a: 1}
+  _spawnColor: {r: 0, g: 1, b: 0, a: 1}
+  _endColor: {r: 1, g: 0, b: 1, a: 1}
+  _pauseColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1001 &132774588
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -905,8 +909,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _waypointType: 0
-  _spawnColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  _normalColor: {r: 0, g: 1, b: 0, a: 1}
+  _normalColor: {r: 1, g: 1, b: 1, a: 1}
+  _spawnColor: {r: 0, g: 1, b: 0, a: 1}
+  _endColor: {r: 1, g: 0, b: 1, a: 1}
+  _pauseColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!4 &141273272 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4589606727732830, guid: 6d6892a877c0a664cb5a53eb2dd13c88, type: 3}
@@ -1889,8 +1895,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _waypointType: 0
-  _spawnColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  _normalColor: {r: 0, g: 1, b: 0, a: 1}
+  _normalColor: {r: 1, g: 1, b: 1, a: 1}
+  _spawnColor: {r: 0, g: 1, b: 0, a: 1}
+  _endColor: {r: 1, g: 0, b: 1, a: 1}
+  _pauseColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1001 &447200350
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2371,8 +2379,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _waypointType: 0
-  _spawnColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  _normalColor: {r: 0, g: 1, b: 0, a: 1}
+  _normalColor: {r: 1, g: 1, b: 1, a: 1}
+  _spawnColor: {r: 0, g: 1, b: 0, a: 1}
+  _endColor: {r: 1, g: 0, b: 1, a: 1}
+  _pauseColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1001 &596405416
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2476,8 +2486,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _waypointType: 0
-  _spawnColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  _normalColor: {r: 0, g: 1, b: 0, a: 1}
+  _normalColor: {r: 1, g: 1, b: 1, a: 1}
+  _spawnColor: {r: 0, g: 1, b: 0, a: 1}
+  _endColor: {r: 1, g: 0, b: 1, a: 1}
+  _pauseColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &624900368
 GameObject:
   m_ObjectHideFlags: 0
@@ -4741,8 +4753,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _waypointType: 1
-  _spawnColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  _normalColor: {r: 0, g: 1, b: 0, a: 1}
+  _normalColor: {r: 1, g: 1, b: 1, a: 1}
+  _spawnColor: {r: 0, g: 1, b: 0, a: 1}
+  _endColor: {r: 1, g: 0, b: 1, a: 1}
+  _pauseColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1001 &1348846917
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4977,7 +4991,7 @@ MonoBehaviour:
   m_UpdateMethod: 2
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
-    m_Style: 0
+    m_Style: 4
     m_Time: 2
     m_CustomCurve:
       serializedVersion: 2
@@ -6078,8 +6092,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _waypointType: 0
-  _spawnColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  _normalColor: {r: 0, g: 1, b: 0, a: 1}
+  _normalColor: {r: 1, g: 1, b: 1, a: 1}
+  _spawnColor: {r: 0, g: 1, b: 0, a: 1}
+  _endColor: {r: 1, g: 0, b: 1, a: 1}
+  _pauseColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1001 &1759303123
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6179,7 +6195,7 @@ Transform:
   m_GameObject: {fileID: 1761468661}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: -7.76}
+  m_LocalPosition: {x: 0, y: 0.5, z: -13.17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
