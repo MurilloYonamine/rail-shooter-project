@@ -33,6 +33,20 @@ namespace RAIL_SHOOTER.RAILS
             }
             return _rails[index];
         }
+        public RailPoint GetNextRail(int currentRailIndex)
+        {
+            int nextIndex = currentRailIndex + 1;
+            if (nextIndex < 0 || nextIndex >= _rails.Length)
+            {
+                return null;
+            }
+            return _rails[nextIndex];
+        }
+        public RailPoint GetNextRail(RailPoint currentRail)
+        {
+            int currentIndex = System.Array.IndexOf(_rails, currentRail);
+            return GetNextRail(currentIndex);
+        }
         public bool HasNextRail(int currentRailIndex)
         {
             return currentRailIndex < (_rails.Length - 1);
@@ -60,6 +74,7 @@ namespace RAIL_SHOOTER.RAILS
             if (firstRail.Type != RailPoint.WaypointType.Spawn)
             {
                 firstRail.Type = RailPoint.WaypointType.Spawn;
+                firstRail.VirtualCamera.Priority = 15;
             }
         }
     }

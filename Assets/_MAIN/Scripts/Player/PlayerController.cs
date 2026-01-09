@@ -20,25 +20,35 @@ namespace RAIL_SHOOTER.PLAYER
             _spawnPoint = railSpawnPoint.transform;
 
             gameObject.transform.position = _spawnPoint.position;
+
+            railSpawnPoint.ActivateCamera(this.transform);
         }
         // TODO: move in a diffrente script
         private void FixedUpdate()
         {
-            RailPoint currentRailPoint = _railTrack.GetRailPerIndex(_currentRailIndex);
+            if(!_railTrack.HasNextRail(_currentRailIndex)) return;
+
+            int nextRailIndex = _currentRailIndex + 1;
+            RailPoint nextRailPoint = _railTrack.GetRailPerIndex(nextRailIndex);
 
             transform.position = Vector3.MoveTowards(
                 transform.position,
-                currentRailPoint.transform.position,
+                nextRailPoint.transform.position,
                 Time.deltaTime * _moveSpeed
             );
 
-            float distance = Vector3.Distance(transform.position, currentRailPoint.transform.position);
+            float distance = Vector3.Distance(transform.position, nextRailPoint.transform.position);
 
-            if (distance <= 0)
+            if (distance <= 0.01f)
             {
                 if (_railTrack.HasNextRail(_currentRailIndex))
                 {
+                    RailPoint currentRailPoint = _railTrack.GetRailPerIndex(_currentRailIndex);
+                    currentRailPoint.DeactivateCamera();
+
                     _currentRailIndex++;
+
+                    nextRailPoint.ActivateCamera(this.transform);
                 }
             }
         }
