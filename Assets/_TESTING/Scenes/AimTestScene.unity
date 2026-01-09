@@ -4972,8 +4972,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1381920228}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.00000002107407, y: 0.7071068, z: 0.000000021074069, w: 0.7071068}
-  m_LocalPosition: {x: -4, y: 0, z: -13.05}
+  m_LocalRotation: {x: -0.000000025379382, y: -0.2730142, z: -0.0000000072025568, w: 0.96201}
+  m_LocalPosition: {x: 11.87, y: 0, z: -14.560001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6183,8 +6183,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1761468662}
-  - component: {fileID: 1761468663}
-  - component: {fileID: 1761468664}
+  - component: {fileID: 1761468667}
   - component: {fileID: 1761468665}
   - component: {fileID: 1761468666}
   m_Layer: 0
@@ -6210,36 +6209,6 @@ Transform:
   - {fileID: 863886523}
   m_Father: {fileID: 1525798957}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1761468663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1761468661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8da0a8867492612458ccdc5dbb52d4a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _hideCursor: 1
-  _sensitivity: 2
-  _crosshair: {fileID: 1684520374}
---- !u!114 &1761468664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1761468661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2d3353e5d59eeb4d840d5f866b9de08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerAim: {fileID: 1761468663}
-  _railTrack: {fileID: 1834721869}
-  _moveSpeed: 5
 --- !u!65 &1761468665
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6288,6 +6257,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1761468667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761468661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d3353e5d59eeb4d840d5f866b9de08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerAim:
+    _hideCursor: 1
+    _sensitivity: 2
+    _crosshair: {fileID: 1684520374}
+  _playerMovement:
+    _railTrack: {fileID: 1834721869}
+    _moveSpeed: 5
 --- !u!1001 &1772703001
 PrefabInstance:
   m_ObjectHideFlags: 0
