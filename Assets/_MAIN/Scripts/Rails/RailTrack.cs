@@ -4,7 +4,7 @@ namespace RAIL_SHOOTER.RAILS
     public class RailTrack : MonoBehaviour
     {
         [SerializeField] private RailPoint[] _rails;
-        [SerializeField] private Color _lineColor = Color.red;
+        [SerializeField] private Color _lineColor = Color.cyan;
         private void OnDrawGizmos()
         {
             if (_rails == null || _rails.Length < 2) return;

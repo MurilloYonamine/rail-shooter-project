@@ -11,6 +11,8 @@ namespace RAIL_SHOOTER.PLAYER.INPUT
         private readonly InputAction _attack;
 
         public static Action<Vector2> OnLookInput;
+        public static Action OnAttackPressed;
+        public static Action OnAttackReleased;
 
         public InputReader()
         {
@@ -45,7 +47,14 @@ namespace RAIL_SHOOTER.PLAYER.INPUT
         }
         private void HandleAttackInput(InputAction.CallbackContext context)
         {
-            Debug.Log("Attack Input Performed");
+            if (context.performed)
+            {
+                OnAttackPressed?.Invoke();
+            }
+            else if (context.canceled)
+            {
+                OnAttackReleased?.Invoke();
+            }
         }
     }
 }

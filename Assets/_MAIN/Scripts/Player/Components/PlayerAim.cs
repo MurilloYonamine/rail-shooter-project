@@ -50,6 +50,26 @@ namespace RAIL_SHOOTER.PLAYER
 
             _crosshair.anchoredPosition = currentPosition;
         }
+        public Vector3 GetAimDirection()
+        {
+            Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
+            Vector2 crosshairScreenPos = _crosshair.anchoredPosition + screenCenter;
+
+            Vector2 direction2D = crosshairScreenPos - screenCenter;
+            Vector3 direction = new Vector3(direction2D.x, 0, direction2D.y);
+
+            return direction.normalized;
+        }
+        public Vector3 GetAimWorldPosition(float distance)
+        {
+            Camera cam = Camera.main;
+
+            Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
+            Vector2 crosshairScreenPos = screenCenter + _crosshair.anchoredPosition;
+
+            Ray ray = cam.ScreenPointToRay(crosshairScreenPos);
+            return ray.origin + ray.direction * distance;
+        }
         private static (Vector2, Vector2) GetScreenBounds()
         {
             int screenWidth = Screen.width;

@@ -10,13 +10,19 @@ namespace RAIL_SHOOTER.PLAYER
         private PlayerComponent[] _playerComponents;
         [SerializeField] private PlayerAim _playerAim;
         [SerializeField] private PlayerMovement _playerMovement;
+        [SerializeField] private PlayerShoot _playerShoot;
+        
+        public PlayerAim PlayerAim => _playerAim;
+        public PlayerMovement PlayerMovement => _playerMovement;
+        public PlayerShoot PlayerShoot => _playerShoot;
 
         private void Awake()
         {
             _playerComponents = new PlayerComponent[]
             {
                 _playerAim,
-                _playerMovement
+                _playerMovement,
+                _playerShoot
             };
             ForEachComponent(component => component?.Initialize(this));
             ForEachComponent(component => component?.OnAwake());

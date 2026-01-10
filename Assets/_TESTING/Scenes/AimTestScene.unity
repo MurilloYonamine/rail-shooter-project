@@ -4972,8 +4972,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1381920228}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.000000025379382, y: -0.2730142, z: -0.0000000072025568, w: 0.96201}
-  m_LocalPosition: {x: 11.87, y: 0, z: -14.560001}
+  m_LocalRotation: {x: -4.0560177e-12, y: 0.025917174, z: 1.0515584e-13, w: 0.9996641}
+  m_LocalPosition: {x: 12.77, y: 0, z: 3.12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6276,6 +6276,13 @@ MonoBehaviour:
   _playerMovement:
     _railTrack: {fileID: 1834721869}
     _moveSpeed: 5
+  _playerShoot:
+    _fireMode: 0
+    _fireRate: 4
+    _burstCount: 3
+    _bulletPrefab: {fileID: 1410591251193352174, guid: e6439d6179b1b0f40b4c80f8f901911f, type: 3}
+    _shootPoint: {fileID: 1761468662}
+    _shootForce: 700
 --- !u!1001 &1772703001
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6456,7 +6463,7 @@ MonoBehaviour:
   - {fileID: 1758968418}
   - {fileID: 139831516}
   - {fileID: 105327726}
-  _lineColor: {r: 1, g: 0, b: 0, a: 1}
+  _lineColor: {r: 1, g: 0.93442965, b: 0, a: 1}
 --- !u!1 &1841107372
 GameObject:
   m_ObjectHideFlags: 0
