@@ -19,6 +19,7 @@ namespace RAIL_SHOOTER.PLAYER
         [SerializeField] private Transform _shootPoint;
         [SerializeField] private float _shootForce = 700f;
         [SerializeField] private float _shootCooldown = 0.5f;
+        [SerializeField] private float _range = 100f;
 
         private float _lastShootTime;
         public override void OnEnable()
@@ -45,19 +46,16 @@ namespace RAIL_SHOOTER.PLAYER
             if (Time.time < _lastShootTime + _shootCooldown)
                 return;
 
-            Vector3 aimWorldPosition = _player.PlayerAim.GetAimWorldPosition(100f);
+            if (!_player.PlayerAim.TryGetAimPoint(out Vector3 aimPoint, _range))
+                return;
 
-            Vector3 shootDirection = (aimWorldPosition - _shootPoint.position).normalized;
+            Vector3 shootDirection = (aimPoint - _shootPoint.position).normalized;
 
             Debug.DrawRay(_shootPoint.position, shootDirection * 10f, Color.red, 1f);
 
-            Quaternion bulletRotation = Quaternion.LookRotation(shootDirection);
+            Quaternion rotationOffset = Quaternion.Euler(0f, 90f, 0f); // virar o modelo da bala
+            Quaternion bulletRotation = Quaternion.LookRotation(shootDirection) * rotationOffset;
 
-            // GameObject bullet = GameObject.Instantiate(
-            //     _bulletPrefab,
-            //     _shootPoint.position,
-            //     bulletRotation
-            // );
             PlayerBullet bullet = BulletPool.Instance.GetBullet();
             bullet.transform.SetPositionAndRotation(
                 _shootPoint.position,
@@ -66,7 +64,6 @@ namespace RAIL_SHOOTER.PLAYER
             bullet.transform.parent = null;
 
             Rigidbody rigidBody = bullet.GetComponent<Rigidbody>();
-
             rigidBody.velocity = Vector3.zero;
             rigidBody.angularVelocity = Vector3.zero;
 
@@ -74,6 +71,5 @@ namespace RAIL_SHOOTER.PLAYER
 
             _lastShootTime = Time.time;
         }
-
     }
 }
