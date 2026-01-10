@@ -15,16 +15,8 @@ namespace RAIL_SHOOTER.RAILS
 
         [field: SerializeField, Range(0.1f, 1.0f)] private float _radious = 0.15f;
 
-        private CinemachineVirtualCamera _virtualCamera;
-
         public WaypointType Type { get => _waypointType; set => _waypointType = value; }
-        public CinemachineVirtualCamera VirtualCamera { get => _virtualCamera; set => _virtualCamera = value; }
 
-        private void Awake()
-        {
-            _virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
-            _virtualCamera?.gameObject.SetActive(false);
-        }
         private void OnDrawGizmos() 
         {
             switch (_waypointType)
@@ -39,26 +31,6 @@ namespace RAIL_SHOOTER.RAILS
                 transform.position,
                 radius: _radious
             );
-        }
-        public void ActivateCamera(Transform playerTransform)
-        {
-            if (_virtualCamera != null)
-            {
-                _virtualCamera.Follow = playerTransform;
-                _virtualCamera.LookAt = playerTransform;
-                _virtualCamera.transform.position = transform.position;
-
-                _virtualCamera.Priority = 20;
-            }
-            _virtualCamera.gameObject.SetActive(true);
-        }
-        public void DeactivateCamera()
-        {
-            if (_virtualCamera != null)
-            {
-                _virtualCamera.Priority = 0;
-            }
-            _virtualCamera.gameObject.SetActive(false);
         }
     }
 }

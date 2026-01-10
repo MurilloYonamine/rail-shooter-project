@@ -74,7 +74,6 @@ namespace RAIL_SHOOTER.RAILS
             if (firstRail.Type != RailPoint.WaypointType.Spawn)
             {
                 firstRail.Type = RailPoint.WaypointType.Spawn;
-                firstRail.VirtualCamera.Priority = 15;
             }
         }
     }

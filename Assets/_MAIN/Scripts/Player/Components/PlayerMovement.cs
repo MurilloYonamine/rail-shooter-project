@@ -18,8 +18,6 @@ namespace RAIL_SHOOTER.PLAYER
             _spawnPoint = railSpawnPoint.transform;
 
             _player.transform.position = _spawnPoint.position;
-
-            railSpawnPoint.ActivateCamera(_player.transform);
         }
         public override void OnFixedUpdate()
         {
@@ -42,11 +40,7 @@ namespace RAIL_SHOOTER.PLAYER
 
                 if (_railTrack.HasNextRail(_currentRailIndex))
                 {
-                    currentRailPoint.DeactivateCamera();
-
                     _currentRailIndex++;
-
-                    nextRailPoint.ActivateCamera(_player.transform);
                 }
 
                 if (currentRailPoint.Type == RailPoint.WaypointType.Pause)
