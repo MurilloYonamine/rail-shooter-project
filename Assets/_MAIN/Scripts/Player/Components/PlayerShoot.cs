@@ -44,11 +44,14 @@ namespace RAIL_SHOOTER.PLAYER
         private void Shoot()
         {
             if (Time.time < _lastShootTime + _shootCooldown)
+            {
                 return;
+            }
 
             if (!_player.PlayerAim.TryGetAimPoint(out Vector3 aimPoint, _range))
+            {
                 return;
-
+            }
             Vector3 shootDirection = (aimPoint - _shootPoint.position).normalized;
 
             Debug.DrawRay(_shootPoint.position, shootDirection * 10f, Color.red, 1f);
