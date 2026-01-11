@@ -14,6 +14,7 @@ namespace RAIL_SHOOTER.PLAYER
 
         public override void OnStart()
         {
+            if (_railTrack == null) return;
             RailPoint railSpawnPoint = _railTrack.GetFirstRail();
             _spawnPoint = railSpawnPoint.transform;
 
@@ -21,6 +22,7 @@ namespace RAIL_SHOOTER.PLAYER
         }
         public override void OnFixedUpdate()
         {
+            if(_railTrack == null) return;
             if (!_railTrack.HasNextRail(_currentRailIndex)) return;
 
             int nextRailIndex = _currentRailIndex + 1;

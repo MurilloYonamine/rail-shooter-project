@@ -15,7 +15,6 @@ namespace RAIL_SHOOTER.PLAYER
             Shotgun
         }
 
-        [SerializeField] private GameObject _bulletPrefab;
         [SerializeField] private Transform _shootPoint;
         [SerializeField] private float _shootForce = 700f;
         [SerializeField] private float _shootCooldown = 0.5f;
