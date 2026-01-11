@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using RAIL_SHOOTER.PLAYER.INPUT;
 using UnityEngine;
 
 namespace RAIL_SHOOTER.PLAYER
@@ -33,35 +32,32 @@ namespace RAIL_SHOOTER.PLAYER
 
         public override void OnEnable()
         {
-            InputReader.OnFirePressed += OnFirePressed;
-            InputReader.OnFireReleased += OnFireReleased;
-            InputReader.OnAimPressed += OnAimPressed;
-            InputReader.OnAimReleased += OnAimReleased;
-            InputReader.OnReloadPressed += OnReloadPressed;
+            _player.OnPlayerFirePressed += OnFirePressed;
+            _player.OnPlayerFireReleased += OnFireReleased;
+            _player.OnPlayerAimPressed += OnAimPressed;
+            _player.OnPlayerAimReleased += OnAimReleased;
+            _player.OnPlayerReloadPressed += OnReloadPressed;
         }
 
         public override void OnDisable()
         {
-            InputReader.OnFirePressed -= OnFirePressed;
-            InputReader.OnFireReleased -= OnFireReleased;
-            InputReader.OnAimPressed -= OnAimPressed;
-            InputReader.OnAimReleased -= OnAimReleased;
-            InputReader.OnReloadPressed -= OnReloadPressed;
+            _player.OnPlayerFirePressed -= OnFirePressed;
+            _player.OnPlayerFireReleased -= OnFireReleased;
+            _player.OnPlayerAimPressed -= OnAimPressed;
+            _player.OnPlayerAimReleased -= OnAimReleased;
+            _player.OnPlayerReloadPressed -= OnReloadPressed;
         }
+
         private void OnFirePressed()
         {
-            if (!_isReloading && !_isFiring)
-            {
-                _player.StartCoroutine(PlayFireAnimation());
-            }
+            _player.StartCoroutine(PlayFireAnimation());
         }
+
         private void OnReloadPressed()
         {
-            if (!_isReloading && !_isFiring)
-            {
-                _player.StartCoroutine(PlayReloadAnimation());
-            }
+            _player.StartCoroutine(PlayReloadAnimation());
         }
+
         private void OnFireReleased()
         {
             // TODO: Implement in future
@@ -73,9 +69,9 @@ namespace RAIL_SHOOTER.PLAYER
         private void SetAiming(bool isAiming)
         {
             _isAiming = isAiming;
-
             _armAnimator?.SetBool(ANIMATOR_PARAM_IS_AIMING, isAiming);
         }
+
         private IEnumerator PlayFireAnimation()
         {
             _isFiring = true;

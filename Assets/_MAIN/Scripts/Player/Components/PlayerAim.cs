@@ -67,18 +67,16 @@ namespace RAIL_SHOOTER.PLAYER
 
         public override void OnEnable()
         {
-            _inputReader.OnEnable();
-            InputReader.OnLookInput += HandleLookInput;
-            InputReader.OnAimPressed += OnAimPressed;
-            InputReader.OnAimReleased += OnAimReleased;
+            _player.OnPlayerLook += HandleLookInput;
+            _player.OnPlayerAimPressed += OnAimPressed;
+            _player.OnPlayerAimReleased += OnAimReleased;
         }
 
         public override void OnDisable()
         {
-            _inputReader.OnDisable();
-            InputReader.OnLookInput -= HandleLookInput;
-            InputReader.OnAimPressed -= OnAimPressed;
-            InputReader.OnAimReleased -= OnAimReleased;
+            _player.OnPlayerLook -= HandleLookInput;
+            _player.OnPlayerAimPressed -= OnAimPressed;
+            _player.OnPlayerAimReleased -= OnAimReleased;
         }
 
         public override void OnUpdate()

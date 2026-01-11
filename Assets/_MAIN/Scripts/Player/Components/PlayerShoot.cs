@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using RAIL_SHOOTER.PLAYER.INPUT;
 using UnityEngine;
 
 namespace RAIL_SHOOTER.PLAYER
@@ -21,22 +20,25 @@ namespace RAIL_SHOOTER.PLAYER
         [SerializeField] private float _range = 100f;
 
         private float _lastShootTime;
+
         public override void OnEnable()
         {
-            InputReader.OnFirePressed += OnAttackPressed;
-            InputReader.OnFireReleased += OnAttackReleased;
+            _player.OnPlayerFirePressed += OnFirePressed;
+            _player.OnPlayerFireReleased += OnFireReleased;
         }
 
         public override void OnDisable()
         {
-            InputReader.OnFirePressed -= OnAttackPressed;
-            InputReader.OnFireReleased -= OnAttackReleased;
+            _player.OnPlayerFirePressed -= OnFirePressed;
+            _player.OnPlayerFireReleased -= OnFireReleased;
         }
-        private void OnAttackPressed()
+
+        private void OnFirePressed()
         {
             Shoot();
         }
-        private void OnAttackReleased()
+
+        private void OnFireReleased()
         {
         }
 
@@ -51,24 +53,21 @@ namespace RAIL_SHOOTER.PLAYER
             {
                 return;
             }
+
             Vector3 shootDirection = (aimPoint - _shootPoint.position).normalized;
 
             Debug.DrawRay(_shootPoint.position, shootDirection * 10f, Color.red, 1f);
 
-            Quaternion rotationOffset = Quaternion.Euler(0f, 90f, 0f); // virar o modelo da bala
+            Quaternion rotationOffset = Quaternion.Euler(0f, 90f, 0f);
             Quaternion bulletRotation = Quaternion.LookRotation(shootDirection) * rotationOffset;
 
             PlayerBullet bullet = BulletPool.Instance.GetBullet();
-            bullet.transform.SetPositionAndRotation(
-                _shootPoint.position,
-                bulletRotation
-            );
+            bullet.transform.SetPositionAndRotation(_shootPoint.position, bulletRotation);
             bullet.transform.parent = null;
 
             Rigidbody rigidBody = bullet.GetComponent<Rigidbody>();
             rigidBody.velocity = Vector3.zero;
             rigidBody.angularVelocity = Vector3.zero;
-
             rigidBody.AddForce(shootDirection * _shootForce, ForceMode.Impulse);
 
             _lastShootTime = Time.time;
