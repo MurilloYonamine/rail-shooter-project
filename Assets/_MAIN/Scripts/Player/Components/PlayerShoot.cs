@@ -17,6 +17,10 @@ namespace RAIL_SHOOTER.PLAYER
         [SerializeField] private Transform _shootPoint;
         [SerializeField] private float _shootForce = 700f;
         [SerializeField] private float _range = 100f;
+        
+        [Header("Accuracy")]
+        [SerializeField] private float _hipFireSpread = 5f; // Graus de dispersão quando não mira
+        [SerializeField] private float _aimSpread = 1f; // Graus de dispersão quando mira
 
         public override void OnEnable()
         {
@@ -47,6 +51,9 @@ namespace RAIL_SHOOTER.PLAYER
             }
 
             Vector3 shootDirection = (aimPoint - _shootPoint.position).normalized;
+            
+            float spreadAngle = _player.IsAiming ? _aimSpread : _hipFireSpread;
+            shootDirection = ApplySpread(shootDirection, spreadAngle);
 
             Debug.DrawRay(_shootPoint.position, shootDirection * 10f, Color.red, 1f);
 
@@ -63,6 +70,21 @@ namespace RAIL_SHOOTER.PLAYER
             rigidBody.AddForce(shootDirection * _shootForce, ForceMode.Impulse);
 
             _player.LastShootTime = Time.time;
+        }
+        
+        private Vector3 ApplySpread(Vector3 direction, float spreadAngle)
+        {
+            float spreadRad = spreadAngle * Mathf.Deg2Rad;
+            
+            float randomX = UnityEngine.Random.Range(-spreadRad, spreadRad);
+            float randomY = UnityEngine.Random.Range(-spreadRad, spreadRad);
+            
+            Quaternion spreadRotation = Quaternion.Euler(
+                randomY * Mathf.Rad2Deg, 
+                randomX * Mathf.Rad2Deg, 
+                z: 0
+            );
+            return spreadRotation * direction;
         }
     }
 }
