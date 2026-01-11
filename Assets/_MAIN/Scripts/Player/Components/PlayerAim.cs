@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using RAIL_SHOOTER.PLAYER.INPUT;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace RAIL_SHOOTER.PLAYER
 {
@@ -12,6 +14,14 @@ namespace RAIL_SHOOTER.PLAYER
         [Header("UI")]
         [SerializeField] private bool _hideCursor = true;
         [SerializeField] private RectTransform _crosshair;
+        [SerializeField] private Image _crosshairImage;
+        [SerializeField] private Sprite _crosshairSprite;
+        [SerializeField] private Sprite _aimCrosshairSprite;
+
+        [Header("Aim Settings")]
+        [SerializeField] private float _aimTransitionSpeed = 5f;
+        [SerializeField] private float _aimSensitivityMultiplier = 0.5f; 
+        [SerializeField] private AnimationCurve _aimTransitionCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
         [Header("Arms Movement")]
         [SerializeField] private Transform _armsRoot; // FP_Arms_Pistol_01_Anims
@@ -20,11 +30,20 @@ namespace RAIL_SHOOTER.PLAYER
         [SerializeField] private float _maxHorizontalAngle = 20f;
         [SerializeField] private float _smoothTime = 0.1f;
 
-        // ...existing code...
         private Vector2 _currentAimInput;
         private Vector2 _aimVelocity;
         private Vector3 _originalArmsRotation;
+        
+        private bool _isAiming = false;
+        private float _aimTransitionProgress = 0f;
+        private float _currentSensitivityMultiplier = 1f;
 
+        public bool IsAiming => _isAiming;
+        public float AimProgress => _aimTransitionProgress;
+        
+
+        #region Unity Lifecycle
+        
         public override void OnAwake()
         {
             _inputReader = new InputReader();
@@ -42,23 +61,45 @@ namespace RAIL_SHOOTER.PLAYER
             {
                 _originalArmsRotation = _armsRoot.localEulerAngles;
             }
+
+            UpdateCrosshairVisibility();
         }
 
         public override void OnEnable()
         {
             _inputReader.OnEnable();
             InputReader.OnLookInput += HandleLookInput;
+            InputReader.OnAimPressed += OnAimPressed;
+            InputReader.OnAimReleased += OnAimReleased;
         }
 
         public override void OnDisable()
         {
             _inputReader.OnDisable();
             InputReader.OnLookInput -= HandleLookInput;
+            InputReader.OnAimPressed -= OnAimPressed;
+            InputReader.OnAimReleased -= OnAimReleased;
         }
 
         public override void OnUpdate()
         {
+            UpdateAimTransition();
             UpdateArmsRotation();
+            UpdateCrosshairVisibility();
+        }
+        
+        #endregion
+
+        #region Input Handling
+        
+        private void OnAimPressed()
+        {
+            _isAiming = true;
+        }
+
+        private void OnAimReleased()
+        {
+            _isAiming = false;
         }
 
         private void HandleLookInput(Vector2 lookInput)
@@ -74,10 +115,58 @@ namespace RAIL_SHOOTER.PLAYER
                 (mouseScreenPos.y / Screen.height - 0.5f) * 2f
             );
 
-            _currentAimInput.x = Mathf.Clamp(normalizedMousePos.x * _aimSensitivity, -1f, 1f);
-            _currentAimInput.y = Mathf.Clamp(normalizedMousePos.y * _aimSensitivity, -1f, 1f);
-        }
+            float effectiveSensitivity = _aimSensitivity * _currentSensitivityMultiplier;
 
+            _currentAimInput.x = Mathf.Clamp(normalizedMousePos.x * effectiveSensitivity, -1f, 1f);
+            _currentAimInput.y = Mathf.Clamp(normalizedMousePos.y * effectiveSensitivity, -1f, 1f);
+        }
+        
+        #endregion
+
+        #region Aim System
+        
+        private void UpdateAimTransition()
+        {
+            float targetProgress = _isAiming ? 1f : 0f;
+            
+            _aimTransitionProgress = Mathf.MoveTowards(
+                _aimTransitionProgress, 
+                targetProgress, 
+                _aimTransitionSpeed * Time.deltaTime
+            );
+
+            float curveValue = _aimTransitionCurve.Evaluate(_aimTransitionProgress);
+            
+            _currentSensitivityMultiplier = Mathf.Lerp(1f, _aimSensitivityMultiplier, curveValue);
+        }
+        
+        #endregion
+
+        #region Crosshair Management
+        
+        private void UpdateCrosshairVisibility()
+        {
+            if (_crosshairImage != null)
+            {
+                if (_isAiming && _aimCrosshairSprite != null)
+                {
+                    _crosshairImage.sprite = _aimCrosshairSprite;
+                }
+                else if (!_isAiming && _crosshairSprite != null)
+                {
+                    _crosshairImage.sprite = _crosshairSprite;
+                }
+
+                Color color = _crosshairImage.color;
+                color.a = Mathf.Lerp(0.7f, 1f, _aimTransitionProgress);
+                _crosshairImage.color = color;
+            }
+        }
+        
+        #endregion
+
+        #region Arms Movement
+        
         private void UpdateArmsRotation()
         {
             if (_armsRoot == null) return;
@@ -91,7 +180,11 @@ namespace RAIL_SHOOTER.PLAYER
             
             _armsRoot.localRotation = Quaternion.Euler(targetRotation);
         }
+        
+        #endregion
 
+        #region Public Methods
+        
         public bool TryGetAimPoint(out Vector3 aimPoint, float maxDistance)
         {
             Camera cam = Camera.main;
@@ -123,5 +216,22 @@ namespace RAIL_SHOOTER.PLAYER
         {
             _aimSensitivity = Mathf.Clamp(intensity, 0f, 5f);
         }
+
+        public float GetAccuracyMultiplier()
+        {
+            return Mathf.Lerp(0.7f, 1f, _aimTransitionProgress);
+        }
+
+        public void SetAimTransitionSpeed(float speed)
+        {
+            _aimTransitionSpeed = Mathf.Clamp(speed, 0.1f, 20f);
+        }
+
+        public void SetAimSensitivityMultiplier(float multiplier)
+        {
+            _aimSensitivityMultiplier = Mathf.Clamp(multiplier, 0.1f, 2f);
+        }
+        
+        #endregion
     }
 }
