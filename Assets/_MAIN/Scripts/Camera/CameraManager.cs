@@ -11,8 +11,6 @@ namespace RAIL_SHOOTER.CAMERA
         [SerializeField] private Vector3 rotationOffset = Vector3.zero;
 
         [SerializeField] private Transform _playerTransform;
-        [SerializeField] private float _smoothTime = 0.1f;
-        [SerializeField] private Vector3 _currentVelocity = Vector3.zero;
         private Camera _mainCamera;
 
         private void Awake()
@@ -23,12 +21,7 @@ namespace RAIL_SHOOTER.CAMERA
         {
             if (_playerTransform != null)
             {
-                _mainCamera.transform.position = Vector3.SmoothDamp(
-                    _mainCamera.transform.position,
-                    _playerTransform.position + positionOffset,
-                    ref _currentVelocity,
-                    _smoothTime
-                );
+                _mainCamera.transform.position = _playerTransform.position + positionOffset;
 
                _mainCamera.transform.rotation = Quaternion.Euler(
                     _playerTransform.eulerAngles + rotationOffset
