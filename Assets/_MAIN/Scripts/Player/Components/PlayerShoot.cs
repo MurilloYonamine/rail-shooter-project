@@ -23,14 +23,14 @@ namespace RAIL_SHOOTER.PLAYER
         private float _lastShootTime;
         public override void OnEnable()
         {
-            InputReader.OnAttackPressed += OnAttackPressed;
-            InputReader.OnAttackReleased += OnAttackReleased;
+            InputReader.OnFirePressed += OnAttackPressed;
+            InputReader.OnFireReleased += OnAttackReleased;
         }
 
         public override void OnDisable()
         {
-            InputReader.OnAttackPressed -= OnAttackPressed;
-            InputReader.OnAttackReleased -= OnAttackReleased;
+            InputReader.OnFirePressed -= OnAttackPressed;
+            InputReader.OnFireReleased -= OnAttackReleased;
         }
         private void OnAttackPressed()
         {
