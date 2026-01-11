@@ -9,8 +9,6 @@ namespace RAIL_SHOOTER.PLAYER
     [Serializable]
     public class PlayerAim : PlayerComponent
     {
-        private InputReader _inputReader;
-
         [Header("UI")]
         [SerializeField] private bool _hideCursor = true;
         [SerializeField] private RectTransform _crosshair;
@@ -34,20 +32,13 @@ namespace RAIL_SHOOTER.PLAYER
         private Vector2 _aimVelocity;
         private Vector3 _originalArmsRotation;
         
-        private bool _isAiming = false;
         private float _aimTransitionProgress = 0f;
         private float _currentSensitivityMultiplier = 1f;
 
-        public bool IsAiming => _isAiming;
         public float AimProgress => _aimTransitionProgress;
         
 
         #region Unity Lifecycle
-        
-        public override void OnAwake()
-        {
-            _inputReader = new InputReader();
-        }
 
         public override void OnStart()
         {
@@ -92,12 +83,12 @@ namespace RAIL_SHOOTER.PLAYER
         
         private void OnAimPressed()
         {
-            _isAiming = true;
+            _player.SetAiming(true);
         }
 
         private void OnAimReleased()
         {
-            _isAiming = false;
+            _player.SetAiming(false);
         }
 
         private void HandleLookInput(Vector2 lookInput)
@@ -125,7 +116,7 @@ namespace RAIL_SHOOTER.PLAYER
         
         private void UpdateAimTransition()
         {
-            float targetProgress = _isAiming ? 1f : 0f;
+            float targetProgress = _player.IsAiming ? 1f : 0f;
             
             _aimTransitionProgress = Mathf.MoveTowards(
                 _aimTransitionProgress, 
@@ -135,7 +126,11 @@ namespace RAIL_SHOOTER.PLAYER
 
             float curveValue = _aimTransitionCurve.Evaluate(_aimTransitionProgress);
             
-            _currentSensitivityMultiplier = Mathf.Lerp(1f, _aimSensitivityMultiplier, curveValue);
+            _currentSensitivityMultiplier = Mathf.Lerp(
+                a: 1f, 
+                _aimSensitivityMultiplier, 
+                curveValue
+            );
         }
         
         #endregion
@@ -146,11 +141,11 @@ namespace RAIL_SHOOTER.PLAYER
         {
             if (_crosshairImage != null)
             {
-                if (_isAiming && _aimCrosshairSprite != null)
+                if (_player.IsAiming && _aimCrosshairSprite != null)
                 {
                     _crosshairImage.sprite = _aimCrosshairSprite;
                 }
-                else if (!_isAiming && _crosshairSprite != null)
+                else if (!_player.IsAiming && _crosshairSprite != null)
                 {
                     _crosshairImage.sprite = _crosshairSprite;
                 }
@@ -169,7 +164,12 @@ namespace RAIL_SHOOTER.PLAYER
         {
             if (_armsRoot == null) return;
 
-            _currentAimInput = Vector2.SmoothDamp(_currentAimInput, _currentAimInput, ref _aimVelocity, _smoothTime);
+            _currentAimInput = Vector2.SmoothDamp(
+                _currentAimInput, 
+                _currentAimInput, 
+                ref _aimVelocity,
+                 _smoothTime
+            );
 
             float verticalRotation = -_currentAimInput.y * _maxVerticalAngle; 
             float horizontalRotation = _currentAimInput.x * _maxHorizontalAngle;
@@ -200,36 +200,6 @@ namespace RAIL_SHOOTER.PLAYER
             aimPoint = ray.origin + ray.direction * maxDistance;
             return false;
         }
-
-        public void ResetArmsRotation()
-        {
-            if (_armsRoot != null)
-            {
-                _armsRoot.localRotation = Quaternion.Euler(_originalArmsRotation);
-            }
-            _currentAimInput = Vector2.zero;
-        }
-
-        public void SetAimIntensity(float intensity)
-        {
-            _aimSensitivity = Mathf.Clamp(intensity, 0f, 5f);
-        }
-
-        public float GetAccuracyMultiplier()
-        {
-            return Mathf.Lerp(0.7f, 1f, _aimTransitionProgress);
-        }
-
-        public void SetAimTransitionSpeed(float speed)
-        {
-            _aimTransitionSpeed = Mathf.Clamp(speed, 0.1f, 20f);
-        }
-
-        public void SetAimSensitivityMultiplier(float multiplier)
-        {
-            _aimSensitivityMultiplier = Mathf.Clamp(multiplier, 0.1f, 2f);
-        }
-        
         #endregion
     }
 }

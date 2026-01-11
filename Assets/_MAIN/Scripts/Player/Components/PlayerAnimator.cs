@@ -23,15 +23,6 @@ namespace RAIL_SHOOTER.PLAYER
         private const string ANIMATOR_PARAM_IS_WALKING = "isWalking";
         private const string ANIMATOR_PARAM_WALK_AIMING = "isWalkAiming";
 
-        [Header("Booleans")]
-        [SerializeField] private bool _isReloading = false;
-        [SerializeField] private bool _isFiring = false;
-        [SerializeField] private bool _isAiming = false;
-
-        public bool IsReloading => _isReloading;
-        public bool IsFiring => _isFiring;
-        public bool IsAiming => _isAiming;
-
         public override void OnEnable()
         {
             _player.OnPlayerFirePressed += OnFirePressed;
@@ -70,16 +61,16 @@ namespace RAIL_SHOOTER.PLAYER
 
         private void SetAiming(bool isAiming)
         {
-            _isAiming = isAiming;
+            _player.SetAiming(isAiming);
             _armAnimator?.SetBool(ANIMATOR_PARAM_IS_AIMING, isAiming);
         }
 
         private IEnumerator PlayFireAnimation()
         {
-            _isFiring = true;
+            _player.SetFiring(true);
 
             float animationDuration = _shootAnimationFrames / 60f;
-            string armAnimatorParam = _isAiming ? ANIMATOR_PARAM_IS_FIRE_AIMING : ANIMATOR_PARAM_IS_FIRING;
+            string armAnimatorParam = _player.IsAiming ? ANIMATOR_PARAM_IS_FIRE_AIMING : ANIMATOR_PARAM_IS_FIRING;
 
             _armAnimator?.SetBool(armAnimatorParam, true);
             _gunAnimator?.SetBool(ANIMATOR_PARAM_IS_FIRING, true);
@@ -89,12 +80,12 @@ namespace RAIL_SHOOTER.PLAYER
             _armAnimator?.SetBool(armAnimatorParam, false);
             _gunAnimator?.SetBool(ANIMATOR_PARAM_IS_FIRING, false);
 
-            _isFiring = false;
+            _player.SetFiring(false);
         }
 
         private IEnumerator PlayReloadAnimation()
         {
-            _isReloading = true;
+            _player.SetReloading(true);
 
             float animationDuration = _reloadAnimationFrames / 60f;
 
@@ -106,12 +97,12 @@ namespace RAIL_SHOOTER.PLAYER
             _armAnimator?.SetBool(ANIMATOR_PARAM_IS_RELOADING, false);
             _gunAnimator?.SetBool(ANIMATOR_PARAM_IS_RELOADING, false);
 
-            _isReloading = false;
+            _player.SetReloading(false);
         }
         public void SetWalking(bool isWalking)
         {
             _armAnimator?.SetBool(ANIMATOR_PARAM_IS_WALKING, isWalking);
-            if (_isAiming)
+            if (_player.IsAiming)
             {
                 _armAnimator?.SetBool(ANIMATOR_PARAM_WALK_AIMING, isWalking);
             }

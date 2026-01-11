@@ -23,8 +23,24 @@ namespace RAIL_SHOOTER.PLAYER
         public event Action OnPlayerAimReleased;
         public event Action OnPlayerReloadPressed;
 
-        private bool CanPerformAction => !_playerAnimator.IsReloading && !_playerAnimator.IsFiring;
+        [Header("Player States")]
+        [SerializeField] private float _shootCooldown = 0.5f;
+        private float _lastShootTime;
+        private bool _isReloading;
+        private bool _isFiring;
+        private bool _isAiming;
 
+        public bool IsReloading => _isReloading;
+        public bool IsFiring => _isFiring;
+        public bool IsAiming => _isAiming;
+        public bool CanShoot => Time.time >= _lastShootTime + _shootCooldown;
+        public bool CanPerformAction => !_isReloading && !_isFiring;
+        public bool CanFire => CanPerformAction && CanShoot;
+
+        public float LastShootTime { get => _lastShootTime; set => _lastShootTime = value; }
+        public float ShootCooldown => _shootCooldown;
+
+        #region Unity Cycle Methods
         private void Awake()
         {
             _inputReader = new InputReader();
@@ -95,6 +111,7 @@ namespace RAIL_SHOOTER.PLAYER
                 componentAction(_playerComponents[i]);
             }
         }
+        #endregion
 
         #region Input Handlers
 
@@ -105,13 +122,9 @@ namespace RAIL_SHOOTER.PLAYER
 
         private void HandleFirePressed()
         {
-            if (CanPerformAction)
+            if (CanFire)
             {
                 OnPlayerFirePressed?.Invoke();
-            }
-            else
-            {
-                Debug.Log($"Cannot fire: IsReloading={_playerAnimator.IsReloading}, IsFiring={_playerAnimator.IsFiring}");
             }
         }
 
@@ -137,6 +150,10 @@ namespace RAIL_SHOOTER.PLAYER
                 OnPlayerReloadPressed?.Invoke();
             }
         }
+
+        public void SetReloading(bool value) => _isReloading = value;
+        public void SetFiring(bool value) => _isFiring = value;
+        public void SetAiming(bool value) => _isAiming = value;
 
         #endregion
 

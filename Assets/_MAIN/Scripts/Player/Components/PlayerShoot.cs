@@ -16,10 +16,7 @@ namespace RAIL_SHOOTER.PLAYER
 
         [SerializeField] private Transform _shootPoint;
         [SerializeField] private float _shootForce = 700f;
-        [SerializeField] private float _shootCooldown = 0.5f;
         [SerializeField] private float _range = 100f;
-
-        private float _lastShootTime;
 
         public override void OnEnable()
         {
@@ -44,11 +41,6 @@ namespace RAIL_SHOOTER.PLAYER
 
         private void Shoot()
         {
-            if (Time.time < _lastShootTime + _shootCooldown)
-            {
-                return;
-            }
-
             if (!_player.PlayerAim.TryGetAimPoint(out Vector3 aimPoint, _range))
             {
                 return;
@@ -70,7 +62,7 @@ namespace RAIL_SHOOTER.PLAYER
             rigidBody.angularVelocity = Vector3.zero;
             rigidBody.AddForce(shootDirection * _shootForce, ForceMode.Impulse);
 
-            _lastShootTime = Time.time;
+            _player.LastShootTime = Time.time;
         }
     }
 }
