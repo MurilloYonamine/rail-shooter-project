@@ -5,11 +5,12 @@ namespace RAIL_SHOOTER.ENEMY
     [RequireComponent(typeof(Animator))]
     public class EnemyController : MonoBehaviour
     {
+        [Header("Components")]
+        [SerializeField] private EnemyHealth _health;
         private EnemyAnimator _animator;
 
         [Header("Enemy States")]
         private EnemyState _currentState;
-
         private EnemyIdle _idleState = new EnemyIdle();
         private EnemyWalking _walkingState = new EnemyWalking();
         private EnemyRunning _runningState = new EnemyRunning();
