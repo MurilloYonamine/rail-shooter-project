@@ -361,6 +361,7 @@ GameObject:
   - component: {fileID: 4652306898990678504}
   - component: {fileID: 6891048768038197298}
   - component: {fileID: 6818115902545306992}
+  - component: {fileID: 774646226021880862}
   m_Layer: 0
   m_Name: Character_Monster_05
   m_TagString: Untagged
@@ -428,6 +429,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &774646226021880862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4392407947791954444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dab6c2cca11b0148a4026b887fb0c0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableInputTesting: 1
 --- !u!1 &4401885327751205112
 GameObject:
   m_ObjectHideFlags: 0
