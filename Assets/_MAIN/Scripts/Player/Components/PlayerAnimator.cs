@@ -20,6 +20,8 @@ namespace RAIL_SHOOTER.PLAYER
         private const string ANIMATOR_PARAM_IS_RELOADING = "isReloading";
         private const string ANIMATOR_PARAM_IS_AIMING = "isAiming";
         private const string ANIMATOR_PARAM_IS_FIRE_AIMING = "isFireAiming";
+        private const string ANIMATOR_PARAM_IS_WALKING = "isWalking";
+        private const string ANIMATOR_PARAM_WALK_AIMING = "isWalkAiming";
 
         [Header("Booleans")]
         [SerializeField] private bool _isReloading = false;
@@ -106,5 +108,13 @@ namespace RAIL_SHOOTER.PLAYER
 
             _isReloading = false;
         }
+        public void SetWalking(bool isWalking)
+        {
+            _armAnimator?.SetBool(ANIMATOR_PARAM_IS_WALKING, isWalking);
+            if (_isAiming)
+            {
+                _armAnimator?.SetBool(ANIMATOR_PARAM_WALK_AIMING, isWalking);
+            }
+        } 
     }
 }

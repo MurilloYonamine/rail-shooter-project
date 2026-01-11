@@ -34,6 +34,8 @@ namespace RAIL_SHOOTER.PLAYER
                 Time.deltaTime * _moveSpeed
             );
 
+            _player.PlayerAnimator.SetWalking(true);
+
             float distance = Vector3.Distance(_player.transform.position, nextRailPoint.transform.position);
 
             if (distance <= 0.01f)
@@ -49,6 +51,7 @@ namespace RAIL_SHOOTER.PLAYER
                 {
                     Debug.Log("Pause at rail point");
                     _moveSpeed = 0f;
+                    _player.PlayerAnimator.SetWalking(false);
                 }
             }
         }
