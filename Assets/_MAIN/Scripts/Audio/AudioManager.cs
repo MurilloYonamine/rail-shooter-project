@@ -43,12 +43,13 @@ namespace RAIL_SHOOTER.AUDIO
             _musicAudioObject.transform.parent = transform;
         }
         
-        public void PlaySFX(AudioClip clip, float volume = 1f)
+        public void PlaySFX(AudioClip clip, float volume = 1f, float pitch = 1f)
         {
             GameObject audioObject = CreateAudioObject($"SFX2D - {clip.name}", _sfxAudioObject.transform);
             AudioSource audioSource = audioObject.GetComponent<AudioSource>();
             
             audioSource.clip = clip;
+            audioSource.pitch = pitch;
             audioSource.volume = volume;
             audioSource.spatialBlend = 0f;
             audioSource.Play();
