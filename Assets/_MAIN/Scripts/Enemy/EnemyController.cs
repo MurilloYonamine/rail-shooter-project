@@ -3,11 +3,12 @@ using UnityEngine;
 namespace RAIL_SHOOTER.ENEMY
 {
     [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(EnemyHealth))]
     public class EnemyController : MonoBehaviour
     {
         [Header("Components")]
-        [SerializeField] private EnemyHealth _health;
         private EnemyAnimator _animator;
+        private EnemyHealth _health;
 
         [Header("Enemy States")]
         private EnemyState _currentState;
@@ -17,12 +18,12 @@ namespace RAIL_SHOOTER.ENEMY
         private EnemyScream _screamState = new EnemyScream();
         private EnemyDeath _deathState = new EnemyDeath();
         private EnemyAttack _attackState = new EnemyAttack();
-
-        [Header("Testing - Old Input System")]
-        [SerializeField] private bool enableInputTesting = true;
+        private EnemyHit _enemyHit = new EnemyHit();
 
         private void Awake()
         {
+            _health = GetComponent<EnemyHealth>();
+
             Animator animatorComponent = GetComponent<Animator>();
             _animator = new EnemyAnimator(animatorComponent);
         }
@@ -33,11 +34,6 @@ namespace RAIL_SHOOTER.ENEMY
         private void Update()
         {
             _currentState?.UpdateState();
-
-            if (enableInputTesting)
-            {
-                TestStates();
-            }
         }
 
         public void ChangeState(EnemyState newState)
@@ -55,40 +51,7 @@ namespace RAIL_SHOOTER.ENEMY
         public EnemyState ScreamState => _screamState;
         public EnemyState DeathState => _deathState;
         public EnemyState AttackState => _attackState;
+        public EnemyState EnemyHit => _enemyHit;
         #endregion
-
-        private void TestStates()
-        {
-            if (Input.GetKeyDown(KeyCode.Keypad1))
-            {
-                Debug.Log("Switching to Idle State");
-                ChangeState(_idleState);
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad2))
-            {
-                Debug.Log("Switching to Walking State");
-                ChangeState(_walkingState);
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad3))
-            {
-                Debug.Log("Switching to Running State");
-                ChangeState(_runningState);
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad4))
-            {
-                Debug.Log("Switching to Scream State");
-                ChangeState(_screamState);
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad5))
-            {
-                Debug.Log("Switching to Death State");
-                ChangeState(_deathState);
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad6))
-            {
-                Debug.Log("Switching to Attack State");
-                ChangeState(_attackState);
-            }
-        }
     }
 }

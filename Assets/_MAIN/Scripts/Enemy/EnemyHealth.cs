@@ -4,24 +4,28 @@ using UnityEngine;
 
 namespace RAIL_SHOOTER.ENEMY
 {
-    [Serializable]
-    public class EnemyHealth : IHealth
+    [RequireComponent(typeof(EnemyController))]
+    public class EnemyHealth : MonoBehaviour, IHealth
     {
-        public int CurrentHealth { get; set; }
-        public int MaxHealth { get; set; }
+        private EnemyController _enemy;
+        [field: SerializeField] public int CurrentHealth { get; set; }
+        [field: SerializeField] public int MaxHealth { get; set; }
 
-        public EnemyHealth(int maxHealth)
+        private void Awake()
         {
-            MaxHealth = maxHealth;
-            CurrentHealth = maxHealth;
+            _enemy = GetComponent<EnemyController>();
+            CurrentHealth = MaxHealth;
         }
         public void TakeDamage(int damage)
         {
             CurrentHealth -= damage;
-            if (CurrentHealth < 0)
+            if (CurrentHealth <= 0)
             {
+                _enemy.ChangeState(_enemy.DeathState);
                 CurrentHealth = 0;
+                return;
             }
+            _enemy.ChangeState(_enemy.EnemyHit);
         }
         public void Heal(int amount)
         {
