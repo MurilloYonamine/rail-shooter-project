@@ -33,28 +33,26 @@ namespace RAIL_SHOOTER.PLAYER
 
         public override void OnEnable()
         {
-            _player.OnPlayerFirePressed += OnFirePressed;
-            _player.OnPlayerFireReleased += OnFireReleased;
+            _player.PlayerShoot.OnShootSuccessful += OnShootSuccessful;
+            _player.PlayerShoot.OnReloadStarted += OnReloadStarted;
             _player.OnPlayerAimPressed += OnAimPressed;
             _player.OnPlayerAimReleased += OnAimReleased;
-            _player.OnPlayerReloadPressed += OnReloadPressed;
         }
 
         public override void OnDisable()
         {
-            _player.OnPlayerFirePressed -= OnFirePressed;
-            _player.OnPlayerFireReleased -= OnFireReleased;
+            _player.PlayerShoot.OnShootSuccessful -= OnShootSuccessful;
+            _player.PlayerShoot.OnReloadStarted -= OnReloadStarted;
             _player.OnPlayerAimPressed -= OnAimPressed;
             _player.OnPlayerAimReleased -= OnAimReleased;
-            _player.OnPlayerReloadPressed -= OnReloadPressed;
         }
 
-        private void OnFirePressed()
+        private void OnShootSuccessful()
         {
             _player.StartCoroutine(PlayFireAnimation());
         }
 
-        private void OnReloadPressed()
+        private void OnReloadStarted()
         {
             _player.StartCoroutine(PlayReloadAnimation());
         }

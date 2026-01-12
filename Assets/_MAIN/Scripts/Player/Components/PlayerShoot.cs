@@ -18,29 +18,71 @@ namespace RAIL_SHOOTER.PLAYER
         [SerializeField] private float _shootForce = 700f;
         [SerializeField] private float _range = 100f;
         
+        [Header("Ammunition")]
+        [SerializeField] private int _maxAmmo = 6;
+        [SerializeField] private float _reloadTime = 2f;
+        private int _currentAmmo;
+        private bool _isReloading;
+
+        public int CurrentAmmo => _currentAmmo;
+        public int MaxAmmo => _maxAmmo;
+        public bool IsReloading => _isReloading;
+        public bool HasAmmo => _currentAmmo > 0;
+
+        public event Action OnAmmoChanged;
+        public event Action OnReloadStarted;
+        public event Action OnReloadFinished;
+        public event Action OnShootSuccessful; 
+        public event Action OnShootFailed;
+        
         [Header("Accuracy")]
-        [SerializeField] private float _hipFireSpread = 5f; // Graus de dispersão quando não mira
-        [SerializeField] private float _aimSpread = 1f; // Graus de dispersão quando mira
+        [SerializeField] private float _hipFireSpread = 5f; 
+        [SerializeField] private float _aimSpread = 1f; 
+
+        public override void OnStart()
+        {
+            _currentAmmo = _maxAmmo;
+            OnAmmoChanged?.Invoke();
+        }
 
         public override void OnEnable()
         {
             _player.OnPlayerFirePressed += OnFirePressed;
             _player.OnPlayerFireReleased += OnFireReleased;
+            _player.OnPlayerReloadPressed += OnReloadPressed;
         }
 
         public override void OnDisable()
         {
             _player.OnPlayerFirePressed -= OnFirePressed;
             _player.OnPlayerFireReleased -= OnFireReleased;
+            _player.OnPlayerReloadPressed -= OnReloadPressed;
         }
 
         private void OnFirePressed()
         {
-            Shoot();
+            if (HasAmmo && !_isReloading)
+            {
+                Shoot();
+                OnShootSuccessful?.Invoke();
+            }
+            else if (!HasAmmo && !_isReloading)
+            {
+                OnShootFailed?.Invoke(); 
+                StartReload();
+            }
         }
 
         private void OnFireReleased()
         {
+        }
+
+        private void OnReloadPressed()
+        {
+            if (!_isReloading && _currentAmmo < _maxAmmo)
+            {
+                StartReload();
+            }
         }
 
         private void Shoot()
@@ -70,6 +112,37 @@ namespace RAIL_SHOOTER.PLAYER
             rigidBody.AddForce(shootDirection * _shootForce, ForceMode.Impulse);
 
             _player.LastShootTime = Time.time;
+
+            _currentAmmo--;
+            OnAmmoChanged?.Invoke();
+
+            if (_currentAmmo <= 0)
+            {
+                StartReload();
+            }
+        }
+
+        private void StartReload()
+        {
+            if (!_isReloading)
+            {
+                _player.StartCoroutine(ReloadCoroutine());
+            }
+        }
+
+        private IEnumerator ReloadCoroutine()
+        {
+            _isReloading = true;
+            _player.SetReloading(true);
+            OnReloadStarted?.Invoke();
+
+            yield return new WaitForSeconds(_reloadTime);
+
+            _currentAmmo = _maxAmmo;
+            _isReloading = false;
+            _player.SetReloading(false);
+            OnAmmoChanged?.Invoke();
+            OnReloadFinished?.Invoke();
         }
         
         private Vector3 ApplySpread(Vector3 direction, float spreadAngle)

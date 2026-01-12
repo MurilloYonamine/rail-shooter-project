@@ -126,10 +126,7 @@ namespace RAIL_SHOOTER.PLAYER
 
         private void HandleFirePressed()
         {
-            if (CanFire)
-            {
-                OnPlayerFirePressed?.Invoke();
-            }
+            OnPlayerFirePressed?.Invoke();
         }
 
         private void HandleFireReleased()
@@ -149,10 +146,7 @@ namespace RAIL_SHOOTER.PLAYER
 
         private void HandleReloadPressed()
         {
-            if (CanPerformAction)
-            {
-                OnPlayerReloadPressed?.Invoke();
-            }
+            OnPlayerReloadPressed?.Invoke();
         }
 
         public void SetReloading(bool value) => _isReloading = value;
