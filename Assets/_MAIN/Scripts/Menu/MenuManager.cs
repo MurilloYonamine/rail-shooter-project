@@ -1,11 +1,21 @@
 using RAIL_SHOOTER.AUDIO;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace RAIL_SHOOTER.MENU
 {
+    public enum MenuType
+    {
+        Principal,
+        Pause
+    }
+
     public class MenuManager : MonoBehaviour
     {
+        [Header("Menu Configuration")]
+        [SerializeField] private MenuType menuType = MenuType.Principal;
+
         [Header("Menu States")]
         [SerializeField] private MainMenu _mainMenu;
         [SerializeField] private Options _options;
@@ -23,18 +33,36 @@ namespace RAIL_SHOOTER.MENU
         [Header("Return Button")]
         [SerializeField] private Button _returnButton;
 
+        [Header("Audio")]
         [SerializeField] private AudioClip _menuMusicClip;
+        [SerializeField] private AudioClip _buttonHoverSound;
+        [SerializeField] private AudioClip _buttonClickSound;
+
+        [Header("Scene Management")]
+        [SerializeField] private string _gameplaySceneName = "MainScene";
 
         private void Start()
         {
             ChangeState(_mainMenu);
             SetupButtons();
-            AudioManager.Instance.PlayMusic(_menuMusicClip);
+            
+            if (menuType == MenuType.Principal)
+            {
+                AudioManager.Instance.PlayMusic(_menuMusicClip);
+            }
+        }
+
+        private void Update()
+        {
+            if (menuType == MenuType.Pause && Input.GetKeyDown(KeyCode.Escape))
+            {
+                ReturnToGame();
+            }
         }
 
         private void SetupButtons()
         {
-            _playButton.onClick.AddListener(() => Debug.Log("Play button clicked"));
+            _playButton.onClick.AddListener(LoadGameplay);
             _optionsButton.onClick.AddListener(() => ChangeState(_options));
             _controlsButton.onClick.AddListener(() => ChangeState(_controls));
             _creditsButton.onClick.AddListener(() => ChangeState(_credits));
@@ -53,7 +81,12 @@ namespace RAIL_SHOOTER.MENU
         {
             if (button != null && button.GetComponent<MenuButtonHover>() == null)
             {
-                button.gameObject.AddComponent<MenuButtonHover>();
+                MenuButtonHover hoverComponent = button.gameObject.AddComponent<MenuButtonHover>();
+
+                if (hoverComponent != null)
+                {
+                    hoverComponent.SetAudioClips(_buttonHoverSound, _buttonClickSound);
+                }
             }
         }
 
@@ -98,6 +131,26 @@ namespace RAIL_SHOOTER.MENU
         {
             ChangeState(_mainMenu);
         }
+
+        public void ReturnToGame()
+        {
+            if (menuType == MenuType.Pause)
+            {
+                gameObject.SetActive(false);
+                Time.timeScale = 1f; 
+                Debug.Log("[MenuManager] Voltando para o jogo");
+            }
+        }
+
+        public void LoadGameplay()
+        {
+            Debug.Log("[MenuManager] Loading gameplay scene: " + _gameplaySceneName);
+
+            AudioManager.Instance.StopAllMusic();
+
+            SceneManager.LoadScene(_gameplaySceneName);
+        }
+
         private void Exit()
         {
 #if UNITY_EDITOR
@@ -106,6 +159,11 @@ namespace RAIL_SHOOTER.MENU
                 Application.Quit();
 #endif
         }
+
+        // Getters
+        public MenuType GetMenuType() => menuType;
+        public void SetMenuType(MenuType type) => menuType = type;
+
         #region State Getters
         public MainMenu MainMenuState => _mainMenu;
         public Options OptionsState => _options;
