@@ -1,4 +1,5 @@
 using System;
+using RAIL_SHOOTER.AUDIO;
 using RAIL_SHOOTER.PLAYER.INPUT;
 using UnityEngine;
 
@@ -40,6 +41,8 @@ namespace RAIL_SHOOTER.PLAYER
         public float LastShootTime { get => _lastShootTime; set => _lastShootTime = value; }
         public float ShootCooldown => _shootCooldown;
 
+        [SerializeField] private AudioClip _environmentSound;
+
         #region Unity Cycle Methods
         private void Awake()
         {
@@ -59,6 +62,7 @@ namespace RAIL_SHOOTER.PLAYER
         private void Start()
         {
             ForEachComponent(component => component?.OnStart());
+            AudioManager.Instance.PlayEnvironmentSFX(_environmentSound, transform.position, volume: 0.2f);
         }
 
         private void OnEnable()

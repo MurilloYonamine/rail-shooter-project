@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using RAIL_SHOOTER.AUDIO;
 
 namespace RAIL_SHOOTER.PLAYER
 {
@@ -14,6 +15,13 @@ namespace RAIL_SHOOTER.PLAYER
         [Header("Animation Durations (in frames / 60fps)")]
         [SerializeField] private float _shootAnimationFrames = 14f;
         [SerializeField] private float _reloadAnimationFrames = 72f;
+
+        [Header("Footstep Audio")]
+        [SerializeField] private AudioClip[] _footstepSounds;
+        [SerializeField] private float _footstepInterval = 0.5f;
+
+        private bool _isWalking = false;
+        private Coroutine _footstepCoroutine;
 
         [Header("Animator Parameters")]
         private const string ANIMATOR_PARAM_IS_FIRING = "isFiring";
@@ -63,6 +71,11 @@ namespace RAIL_SHOOTER.PLAYER
         {
             _player.SetAiming(isAiming);
             _armAnimator?.SetBool(ANIMATOR_PARAM_IS_AIMING, isAiming);
+
+            if (_isWalking)
+            {
+                _armAnimator?.SetBool(ANIMATOR_PARAM_WALK_AIMING, isAiming);
+            }
         }
 
         private IEnumerator PlayFireAnimation()
@@ -102,10 +115,55 @@ namespace RAIL_SHOOTER.PLAYER
         public void SetWalking(bool isWalking)
         {
             _armAnimator?.SetBool(ANIMATOR_PARAM_IS_WALKING, isWalking);
-            if (_player.IsAiming)
+            _armAnimator?.SetBool(ANIMATOR_PARAM_WALK_AIMING, isWalking && _player.IsAiming);
+
+            if (isWalking != _isWalking)
             {
-                _armAnimator?.SetBool(ANIMATOR_PARAM_WALK_AIMING, isWalking);
+                _isWalking = isWalking;
+
+                if (_isWalking)
+                {
+                    StartFootsteps();
+                    return;
+                }
+                StopFootsteps();
             }
-        } 
+        }
+
+        private void StartFootsteps()
+        {
+            if (_footstepCoroutine != null)
+            {
+                _player.StopCoroutine(_footstepCoroutine);
+            }
+            _footstepCoroutine = _player.StartCoroutine(PlayFootstepsLoop());
+        }
+
+        private void StopFootsteps()
+        {
+            if (_footstepCoroutine != null)
+            {
+                _player.StopCoroutine(_footstepCoroutine);
+                _footstepCoroutine = null;
+            }
+        }
+
+        private IEnumerator PlayFootstepsLoop()
+        {
+            while (_isWalking)
+            {
+                if (_footstepSounds != null && _footstepSounds.Length > 0)
+                {
+                    AudioClip currentFootstep = _footstepSounds[UnityEngine.Random.Range(0, _footstepSounds.Length)];
+                    
+                    if (currentFootstep != null)
+                    {
+                        AudioManager.Instance.PlaySFX(currentFootstep, volume: 0.15f);
+                    }
+                }
+
+                yield return new WaitForSeconds(_footstepInterval);
+            }
+        }
     }
 }

@@ -31,19 +31,19 @@ namespace RAIL_SHOOTER.PLAYER
         private void OnFirePressed()
         {
             if(_fireSound == null) return;
-            AudioManager.Instance.PlaySFX(_fireSound, _player.transform.position, volume: 0.4f);
+            AudioManager.Instance.PlaySFX(_fireSound, volume: 0.4f);
         }
 
         private void OnReloadPressed()
         {
             if(_reloadSound == null) return;
-            AudioManager.Instance.PlaySFX(_reloadSound, _player.transform.position, volume: 0.4f);
+            AudioManager.Instance.PlaySFX(_reloadSound, volume: 0.4f);
         }
 
         private void OnAimPressed()
         {
             if(_aimSound == null) return;
-            AudioManager.Instance.PlaySFX(_aimSound, _player.transform.position, volume: 0.1f);
+            AudioManager.Instance.PlaySFX(_aimSound, volume: 0.1f);
         }
 
         private void OnAimReleased()
