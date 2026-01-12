@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace RAIL_SHOOTER.ENEMY
@@ -51,6 +52,18 @@ namespace RAIL_SHOOTER.ENEMY
         public void PlayHitAnimation()
         {
             _animator.SetTrigger(ANIMATOR_PARAM_HIT_TRIGGER);
+        }
+        
+        public bool IsHitAnimationFinished()
+        {
+            AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+            
+            if (stateInfo.IsName("Hit"))
+            {
+                return stateInfo.normalizedTime >= 0.95f;
+            }
+            
+            return true;
         }
     }
 }
