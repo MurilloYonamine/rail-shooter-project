@@ -1,29 +1,33 @@
 # Rail Shooter Project
 
-> Este é um projeto de rail shooter desenvolvido em Unity.
+> A rail shooter developed in Unity.
 
-## Especificações Técnicas
+## Technical Specifications
 
 - **Unity Version:** `2022.3.62f3`
-- **Plataforma:** Windows
-- **Linguagem:** C#
+- **Platform:** Windows
+- **Language:** C#
+- **Input System:** New Unity Input System
+- **Render Pipeline:** Universal Render Pipeline (URP)
 
-## Sistema do player
+**Technical documentation**: [Player System](Assets/_MAIN/Scripts/Player/README.md)
 
-O sistema de controle do jogador utiliza uma arquitetura modular baseada em componentes, permitindo fácil extensão e manutenção do código.
+## Controls
 
-**Componentes principais:**
-- **PlayerController** - Centro dos componentes
-- **PlayerAim** - Sistema de mira e crosshair  
-- **PlayerMovement** - Movimentação automática pelos trilhos
+| Action | Input | Description |
+|--------|-------|-------------|
+| **Aim** | Mouse | Controls aiming and crosshair |
+| **Shoot** | Left Mouse | Fire projectiles |
+| **Aim Down Sights** | Right Mouse | Activate precision aiming mode |
+| **Reload** | R | Reload weapon |
 
-📋 **Documentação completa**: [Sistema de Player](Assets/_MAIN/Scripts/Player/README.md)
+## Assets and Resources
 
-## Assets Utilizados
-
+### Visual Assets
 - **Crosshair Pack:** [Kenney Crosshair Pack](https://kenney.nl/assets/crosshair-pack)
 - **Weapon Pack:** [PSX Weapons Assets](https://kuptchi.itch.io/f)
 
-## 🎮 Controles
-
-*Em desenvolvimento...*
+### Audio Assets
+- **Dripping Water Loop:** [OpenGameArt](https://opengameart.org/content/dripping-water-loop)
+- **Gun Reload Sounds:** [OpenGameArt](https://opengameart.org/content/gun-reload-sounds)
+- **Sound Effect:** [Darina Evstafeva](https://pixabay.com/users/nematoki-32544028/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=328044) from [Pixabay](https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=328044)
