@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 54645df494cf97543946904d7d8bcfe0
+guid: 63b26951a5e3aa247a940fdec8260ab9
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Reaction hit
+      name: zombie idle (1)
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 60
+      lastFrame: 120
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
