@@ -61,7 +61,7 @@ namespace RAIL_SHOOTER.PLAYER
 
         private void OnFirePressed()
         {
-            if (HasAmmo && !_isReloading)
+            if (HasAmmo && !_isReloading && _player.CanShoot)
             {
                 Shoot();
                 OnShootSuccessful?.Invoke();
