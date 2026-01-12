@@ -23,10 +23,17 @@ namespace RAIL_SHOOTER.ENEMY
         }
         public void TakeDamage(int damage)
         {
+            if (!_enemy.CanTakeHit)
+            {
+                return;
+            }
+            
+            _enemy.RegisterHit();
             CurrentHealth -= damage;
 
             if (IsDead())
             {
+                _enemy.EnablePlayerMovement();
                 _enemy.ChangeState(_enemy.DeathState);
                 CurrentHealth = 0;
                 StartCoroutine(DisableObject());

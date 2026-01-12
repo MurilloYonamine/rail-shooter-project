@@ -1,11 +1,12 @@
 using System.Collections;
 using UnityEngine;
+using RAIL_SHOOTER.AUDIO;
+using RAIL_SHOOTER.MANAGERS;
 
 namespace RAIL_SHOOTER.ENEMY
 {
     public class EnemyAnimator
     {
-        [Header("Animator Parameters")]
         private const string ANIMATOR_PARAM_IS_IDLE = "isIdle";
         private const string ANIMATOR_PARAM_IS_WALKING = "isWalking";
         private const string ANIMATOR_PARAM_IS_RUNNING = "isRunning";
@@ -16,10 +17,19 @@ namespace RAIL_SHOOTER.ENEMY
         private const string ANIMATOR_PARAM_HIT_TRIGGER = "Hit";
 
         private Animator _animator;
+        private MonoBehaviour _enemyMonoBehaviour;
+        
+        private float _walkingFootstepInterval = 0.6f;
+        private float _runningFootstepInterval = 0.4f;
+        
+        private Coroutine _footstepCoroutine;
+        private bool _isWalking = false;
+        private bool _isRunning = false;
 
         public EnemyAnimator(Animator animator)
         {
             _animator = animator;
+            _enemyMonoBehaviour = animator.GetComponent<MonoBehaviour>(); 
         }
         public void SetIdle(bool isIdle)
         {
@@ -28,10 +38,30 @@ namespace RAIL_SHOOTER.ENEMY
         public void SetWalking(bool isWalking)
         {
             _animator.SetBool(ANIMATOR_PARAM_IS_WALKING, isWalking);
+            _isWalking = isWalking;
+            
+            if (isWalking && !_isRunning)
+            {
+                StartFootsteps(false);
+            }
+            else if (!isWalking && !_isRunning)
+            {
+                StopFootsteps();
+            }
         }
         public void SetRunning(bool isRunning)
         {
             _animator.SetBool(ANIMATOR_PARAM_IS_RUNNING, isRunning);
+            _isRunning = isRunning;
+            
+            if (isRunning)
+            {
+                StartFootsteps(true);
+            }
+            else if (!_isWalking)
+            {
+                StopFootsteps();
+            }
         }
         public void PlayAttackAnimation()
         {
@@ -54,16 +84,98 @@ namespace RAIL_SHOOTER.ENEMY
             _animator.SetTrigger(ANIMATOR_PARAM_HIT_TRIGGER);
         }
         
+        public void ForceRunningState()
+        {
+            _animator.SetBool(ANIMATOR_PARAM_IS_IDLE, false);
+            _animator.SetBool(ANIMATOR_PARAM_IS_WALKING, false);
+            _animator.SetBool(ANIMATOR_PARAM_IS_RUNNING, false);
+            
+            _animator.SetBool(ANIMATOR_PARAM_IS_RUNNING, true);
+            _isRunning = true;
+            _isWalking = false;
+            
+            StartFootsteps(true);
+        }
+        
+        public void ResetAllAnimations()
+        {
+            _animator.SetBool(ANIMATOR_PARAM_IS_IDLE, false);
+            _animator.SetBool(ANIMATOR_PARAM_IS_WALKING, false);
+            _animator.SetBool(ANIMATOR_PARAM_IS_RUNNING, false);
+            
+            _animator.ResetTrigger(ANIMATOR_PARAM_ATTACK_TRIGGER);
+            _animator.ResetTrigger(ANIMATOR_PARAM_LUMBERJACK_ATTACK_TRIGGER);
+            _animator.ResetTrigger(ANIMATOR_PARAM_DEATH_TRIGGER);
+            _animator.ResetTrigger(ANIMATOR_PARAM_SCREAM_TRIGGER);
+            _animator.ResetTrigger(ANIMATOR_PARAM_HIT_TRIGGER);
+            
+            _isWalking = false;
+            _isRunning = false;
+            StopFootsteps();
+        }
+        
         public bool IsHitAnimationFinished()
         {
             AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
             
-            if (stateInfo.IsName("Hit"))
+            bool isInHitState = stateInfo.IsName("Hit") || stateInfo.IsName("Reaction Hit");
+            
+            if (isInHitState)
             {
-                return stateInfo.normalizedTime >= 0.95f;
+                bool finished = stateInfo.normalizedTime >= 0.9f;
+                return finished;
             }
             
             return true;
         }
+        
+        #region Footstep System
+        private void StartFootsteps(bool isRunning)
+        {
+            if (_footstepCoroutine != null)
+            {
+                _enemyMonoBehaviour.StopCoroutine(_footstepCoroutine);
+            }
+            _footstepCoroutine = _enemyMonoBehaviour.StartCoroutine(PlayFootstepsLoop(isRunning));
+        }
+        
+        private void StopFootsteps()
+        {
+            if (_footstepCoroutine != null)
+            {
+                _enemyMonoBehaviour.StopCoroutine(_footstepCoroutine);
+                _footstepCoroutine = null;
+            }
+        }
+        
+        private IEnumerator PlayFootstepsLoop(bool isRunning)
+        {
+            float interval = isRunning ? _runningFootstepInterval : _walkingFootstepInterval;
+            
+            while ((isRunning && _isRunning) || (!isRunning && _isWalking && !_isRunning))
+            {
+                if (GameManager.Instance != null)
+                {
+                    AudioClip currentFootstep = GameManager.Instance.GetRandomFootstepSound();
+                    
+                    if (currentFootstep != null && AudioManager.Instance != null)
+                    {
+                        float volume = isRunning ? 0.25f : 0.15f;
+                        float pitch = isRunning ? Random.Range(0.9f, 1.1f) : Random.Range(0.8f, 1.0f);
+                        
+                        try
+                        {
+                            AudioManager.Instance.PlaySFX(currentFootstep, volume: volume, pitch: pitch);
+                        }
+                        catch (System.Exception)
+                        {
+                        }
+                    }
+                }
+                
+                yield return new WaitForSeconds(interval);
+            }
+        }
+        #endregion
     }
 }

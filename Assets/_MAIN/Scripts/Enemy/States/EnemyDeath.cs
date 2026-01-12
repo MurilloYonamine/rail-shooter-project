@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace RAIL_SHOOTER.ENEMY
 {
     public class EnemyDeath : EnemyState
@@ -8,16 +10,15 @@ namespace RAIL_SHOOTER.ENEMY
         {
             _enemy = enemy;
             _enemy.Animator.PlayDeathAnimation();
+            Debug.Log("[EnemyDeath] Entered death state");
         }
 
         public override void ExitState()
         {
-            // Usually won't exit from death state
         }
 
         public override void UpdateState()
         {
-            // Death logic here - maybe destroy object after animation
         }
     }
 }
