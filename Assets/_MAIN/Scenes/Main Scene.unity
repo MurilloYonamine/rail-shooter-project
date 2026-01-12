@@ -855,13 +855,13 @@ MonoBehaviour:
   volumeProfile: {fileID: 11400000, guid: 7bbe35cdf5d69e14abbb03eccedaa5bd, type: 2}
   isEnabled: 1
   fogDensity: 10
-  fogDistance: 4.7
+  fogDistance: 160
   fogNear: 0
   fogFar: 81.3
   fogAltScale: 10
   fogThinning: 458
   noiseScale: 843
-  noiseStrength: 0.029
+  noiseStrength: 0
   fogColor: {r: 0, g: 0, b: 0, a: 0}
   ambientColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &596316132
@@ -3606,8 +3606,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 876927998}
   - {fileID: 596316133}
+  - {fileID: 876927998}
   - {fileID: 117459815}
   - {fileID: 557758817}
   - {fileID: 982316024}
