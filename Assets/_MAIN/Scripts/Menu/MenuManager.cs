@@ -1,3 +1,4 @@
+using RAIL_SHOOTER.AUDIO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,10 +23,13 @@ namespace RAIL_SHOOTER.MENU
         [Header("Return Button")]
         [SerializeField] private Button _returnButton;
 
+        [SerializeField] private AudioClip _menuMusicClip;
+
         private void Start()
         {
             ChangeState(_mainMenu);
             SetupButtons();
+            AudioManager.Instance.PlayMusic(_menuMusicClip);
         }
 
         private void SetupButtons()

@@ -10,6 +10,11 @@ namespace RAIL_SHOOTER.AUDIO
 
         [SerializeField] private AudioMixer _audioMixer;
 
+        [Header("Audio Mixer Groups")]
+        [SerializeField] private AudioMixerGroup _masterMixerGroup;
+        [SerializeField] private AudioMixerGroup _sfxMixerGroup;
+        [SerializeField] private AudioMixerGroup _musicMixerGroup;
+
         [Header("Audio Mixer Parameters")]
         private const string MIXER_PARAM_MASTER_VOLUME = "MasterVolume";
         private const string MIXER_PARAM_SFX_VOLUME = "SFXVolume";
@@ -45,13 +50,14 @@ namespace RAIL_SHOOTER.AUDIO
         
         public void PlaySFX(AudioClip clip, float volume = 1f, float pitch = 1f)
         {
-            GameObject audioObject = CreateAudioObject($"SFX2D - {clip.name}", _sfxAudioObject.transform);
+            GameObject audioObject = CreateAudioObject($"SFX - {clip.name}", _sfxAudioObject.transform);
             AudioSource audioSource = audioObject.GetComponent<AudioSource>();
             
             audioSource.clip = clip;
             audioSource.pitch = pitch;
             audioSource.volume = volume;
             audioSource.spatialBlend = 0f;
+            audioSource.outputAudioMixerGroup = _sfxMixerGroup;
             audioSource.Play();
 
             Destroy(audioObject, clip.length);
@@ -62,12 +68,19 @@ namespace RAIL_SHOOTER.AUDIO
             string sfxPath = SFX_FOLDER_PATH + sfxName;
             AudioClip clip = Resources.Load<AudioClip>(sfxPath);
             
-            GameObject audioObject = CreateAudioObject($"SFX2D - {clip.name}", _sfxAudioObject.transform);
+            if (clip == null)
+            {
+                Debug.LogWarning($"AudioClip não encontrado: {sfxPath}");
+                return;
+            }
+            
+            GameObject audioObject = CreateAudioObject($"SFX - {clip.name}", _sfxAudioObject.transform);
             AudioSource audioSource = audioObject.GetComponent<AudioSource>();
             
             audioSource.clip = clip;
             audioSource.volume = volume;
-            audioSource.spatialBlend = 0f; 
+            audioSource.spatialBlend = 0f;
+            audioSource.outputAudioMixerGroup = _sfxMixerGroup;
             audioSource.Play();
 
             Destroy(audioObject, clip.length);
@@ -81,28 +94,41 @@ namespace RAIL_SHOOTER.AUDIO
             audioSource.clip = clip;
             audioSource.loop = loop;
             audioSource.volume = volume;
-            audioSource.spatialBlend = 1f; 
+            audioSource.spatialBlend = 1f;
             audioSource.minDistance = 1f;
             audioSource.maxDistance = 20f;
+            audioSource.outputAudioMixerGroup = _sfxMixerGroup;
             audioSource.Play();
 
-            Destroy(audioObject, clip.length);
+            if (!loop)
+                Destroy(audioObject, clip.length);
         }
         
         public void PlayMusic(AudioClip clip, float volume = 1f, bool loop = true)
         {
+            StopAllMusic();
+            
             GameObject audioObject = CreateAudioObject($"Music - {clip.name}", _musicAudioObject.transform);
             AudioSource audioSource = audioObject.GetComponent<AudioSource>();
 
             audioSource.clip = clip;
             audioSource.volume = volume;
             audioSource.loop = loop;
+            audioSource.outputAudioMixerGroup = _musicMixerGroup;
             audioSource.Play();
         }
         public void PlayMusic(string songName, float volume = 1f, bool loop = true)
         {
             string songPath = MUSIC_FOLDER_PATH + songName;
             AudioClip clip = Resources.Load<AudioClip>(songPath);
+            
+            if (clip == null)
+            {
+                Debug.LogWarning($"AudioClip de música não encontrado: {songPath}");
+                return;
+            }
+
+            StopAllMusic();
 
             GameObject audioObject = CreateAudioObject($"Music - {clip.name}", _musicAudioObject.transform);
             AudioSource audioSource = audioObject.GetComponent<AudioSource>();
@@ -110,10 +136,48 @@ namespace RAIL_SHOOTER.AUDIO
             audioSource.clip = clip;
             audioSource.volume = volume;
             audioSource.loop = loop;
+            audioSource.outputAudioMixerGroup = _musicMixerGroup;
             audioSource.Play();
         }
         public void StopMusic(string songName) => StopAudio(songName, _musicAudioObject);
         public void StopSFX(string sfxName) => StopAudio(sfxName, _sfxAudioObject);
+        
+        public void StopAllMusic()
+        {
+            AudioSource[] audioSources = _musicAudioObject.GetComponentsInChildren<AudioSource>();
+            foreach (AudioSource source in audioSources)
+            {
+                if (source.isPlaying)
+                {
+                    Destroy(source.gameObject);
+                }
+            }
+        }
+        
+        public void StopAllSFX()
+        {
+            AudioSource[] audioSources = _sfxAudioObject.GetComponentsInChildren<AudioSource>();
+            foreach (AudioSource source in audioSources)
+            {
+                if (source.isPlaying)
+                {
+                    Destroy(source.gameObject);
+                }
+            }
+        }
+
+        public bool IsMusicPlaying()
+        {
+            AudioSource[] audioSources = _musicAudioObject.GetComponentsInChildren<AudioSource>();
+            foreach (AudioSource source in audioSources)
+            {
+                if (source.isPlaying)
+                    return true;
+            }
+            return false;
+        }
+
+        public AudioMixer GetAudioMixer() => _audioMixer;
         private void StopAudio(string audioName, GameObject parentObject)
         {
             AudioSource[] audioSources = parentObject.GetComponentsInChildren<AudioSource>();
