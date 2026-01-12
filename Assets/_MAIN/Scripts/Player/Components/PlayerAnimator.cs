@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using RAIL_SHOOTER.AUDIO;
+using RAIL_SHOOTER.MANAGERS;
 
 namespace RAIL_SHOOTER.PLAYER
 {
@@ -17,7 +18,6 @@ namespace RAIL_SHOOTER.PLAYER
         [SerializeField] private float _reloadAnimationFrames = 72f;
 
         [Header("Footstep Audio")]
-        [SerializeField] private AudioClip[] _footstepSounds;
         [SerializeField] private float _footstepInterval = 0.5f;
 
         private bool _isWalking = false;
@@ -150,13 +150,20 @@ namespace RAIL_SHOOTER.PLAYER
         {
             while (_isWalking)
             {
-                if (_footstepSounds != null && _footstepSounds.Length > 0)
+                if (GameManager.Instance != null)
                 {
-                    AudioClip currentFootstep = _footstepSounds[UnityEngine.Random.Range(0, _footstepSounds.Length)];
+                    AudioClip currentFootstep = GameManager.Instance.GetRandomFootstepSound();
                     
-                    if (currentFootstep != null)
+                    if (currentFootstep != null && AudioManager.Instance != null)
                     {
-                        AudioManager.Instance.PlaySFX(currentFootstep, volume: 0.15f);
+                        try
+                        {
+                            AudioManager.Instance.PlaySFX(currentFootstep, volume: 0.15f);
+                        }
+                        catch (System.Exception e)
+                        {
+                            Debug.LogWarning($"[PlayerAnimator] AudioManager não configurado corretamente: {e.Message}");
+                        }
                     }
                 }
 
