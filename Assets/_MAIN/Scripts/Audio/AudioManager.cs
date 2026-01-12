@@ -27,8 +27,11 @@ namespace RAIL_SHOOTER.AUDIO
             if (Instance != null)
             {
                 Destroy(gameObject);
+                return;
             }
             Instance = this;
+
+            transform.SetParent(null);
             DontDestroyOnLoad(gameObject);
         }
         private void Start()
@@ -39,33 +42,52 @@ namespace RAIL_SHOOTER.AUDIO
             _musicAudioObject = new GameObject("Music");
             _musicAudioObject.transform.parent = transform;
         }
-        public void PlaySFX(AudioClip clip, Vector3 position, float volume = 1f)
+        
+        public void PlaySFX(AudioClip clip, float volume = 1f)
         {
-            GameObject audioObject = CreateAudioObject($"SFX - {clip.name}", _sfxAudioObject.transform);
+            GameObject audioObject = CreateAudioObject($"SFX2D - {clip.name}", _sfxAudioObject.transform);
             AudioSource audioSource = audioObject.GetComponent<AudioSource>();
-
+            
             audioSource.clip = clip;
             audioSource.volume = volume;
-            audioSource.spatialBlend = 1f;
+            audioSource.spatialBlend = 0f;
             audioSource.Play();
 
             Destroy(audioObject, clip.length);
         }
-        public void PlaySFX(string sfxName, Vector3 position, float volume = 1f)
+        
+        public void PlaySFX(string sfxName, float volume = 1f)
         {
             string sfxPath = SFX_FOLDER_PATH + sfxName;
             AudioClip clip = Resources.Load<AudioClip>(sfxPath);
-
-            GameObject audioObject = CreateAudioObject($"SFX - {clip.name}", _sfxAudioObject.transform);
+            
+            GameObject audioObject = CreateAudioObject($"SFX2D - {clip.name}", _sfxAudioObject.transform);
             AudioSource audioSource = audioObject.GetComponent<AudioSource>();
-
+            
             audioSource.clip = clip;
             audioSource.volume = volume;
-            audioSource.spatialBlend = 1f;
+            audioSource.spatialBlend = 0f; 
             audioSource.Play();
 
             Destroy(audioObject, clip.length);
         }
+        public void PlayEnvironmentSFX(AudioClip clip, Vector3 position, float volume = 1f, bool loop = true)
+        {
+            GameObject audioObject = CreateAudioObject($"SFX - {clip.name}");
+            audioObject.transform.position = position;
+            AudioSource audioSource = audioObject.GetComponent<AudioSource>();
+
+            audioSource.clip = clip;
+            audioSource.loop = loop;
+            audioSource.volume = volume;
+            audioSource.spatialBlend = 1f; 
+            audioSource.minDistance = 1f;
+            audioSource.maxDistance = 20f;
+            audioSource.Play();
+
+            Destroy(audioObject, clip.length);
+        }
+        
         public void PlayMusic(AudioClip clip, float volume = 1f, bool loop = true)
         {
             GameObject audioObject = CreateAudioObject($"Music - {clip.name}", _musicAudioObject.transform);
