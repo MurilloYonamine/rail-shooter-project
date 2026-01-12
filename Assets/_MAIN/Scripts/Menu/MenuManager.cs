@@ -41,28 +41,41 @@ namespace RAIL_SHOOTER.MENU
         [Header("Scene Management")]
         [SerializeField] private string _gameplaySceneName = "MainScene";
 
+        [SerializeField] private GameObject menuParent;
+        
+        private PauseController _pauseController;
+
+        private void Awake()
+        {
+            if (menuType == MenuType.Pause && menuParent != null)
+            {
+                menuParent.SetActive(false);
+                _pauseController = GetComponent<PauseController>();
+            }
+        }
+
         private void Start()
         {
             ChangeState(_mainMenu);
             SetupButtons();
-            
+
             if (menuType == MenuType.Principal)
             {
                 AudioManager.Instance.PlayMusic(_menuMusicClip);
             }
         }
 
-        private void Update()
-        {
-            if (menuType == MenuType.Pause && Input.GetKeyDown(KeyCode.Escape))
-            {
-                ReturnToGame();
-            }
-        }
-
         private void SetupButtons()
         {
-            _playButton.onClick.AddListener(LoadGameplay);
+            if (menuType == MenuType.Pause)
+            {
+                _playButton.onClick.AddListener(ReturnToGame);
+            }
+            else
+            {
+                _playButton.onClick.AddListener(LoadGameplay);
+            }
+            
             _optionsButton.onClick.AddListener(() => ChangeState(_options));
             _controlsButton.onClick.AddListener(() => ChangeState(_controls));
             _creditsButton.onClick.AddListener(() => ChangeState(_credits));
@@ -97,7 +110,6 @@ namespace RAIL_SHOOTER.MENU
             _currentState.EnterState(this);
 
             UpdateReturnButtonVisibility();
-
             ResetAllButtonHovers();
         }
 
@@ -134,33 +146,50 @@ namespace RAIL_SHOOTER.MENU
 
         public void ReturnToGame()
         {
-            if (menuType == MenuType.Pause)
+            if (menuType == MenuType.Pause && menuParent != null)
             {
-                gameObject.SetActive(false);
-                Time.timeScale = 1f; 
+                menuParent.SetActive(false);
+                
+                if (_pauseController != null)
+                {
+                    _pauseController.RequestResume();
+                }
+                
                 Debug.Log("[MenuManager] Voltando para o jogo");
+            }
+        }
+
+        public void ShowPauseMenu()
+        {
+            if (menuType == MenuType.Pause && menuParent != null)
+            {
+                menuParent.SetActive(true);
+                ChangeState(_mainMenu);
+                Debug.Log("[MenuManager] Menu de pause ativado");
             }
         }
 
         public void LoadGameplay()
         {
-            Debug.Log("[MenuManager] Loading gameplay scene: " + _gameplaySceneName);
-
             AudioManager.Instance.StopAllMusic();
-
             SceneManager.LoadScene(_gameplaySceneName);
         }
 
         private void Exit()
         {
+            if (menuType == MenuType.Pause)
+            {
+                SceneManager.LoadScene("Menu");
+                Time.timeScale = 1f; 
+                return;
+            }
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
-                Application.Quit();
+            Application.Quit();
 #endif
         }
 
-        // Getters
         public MenuType GetMenuType() => menuType;
         public void SetMenuType(MenuType type) => menuType = type;
 
