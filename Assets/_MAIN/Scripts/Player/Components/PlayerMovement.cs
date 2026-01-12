@@ -13,6 +13,25 @@ namespace RAIL_SHOOTER.PLAYER
         [SerializeField] private float _moveSpeed = 5.0f;
         [SerializeField] private float _rotationSpeed = 5.0f;
         [SerializeField] private float _modelRotationOffset = 90f; // Ajuste para corrigir orientação do modelo
+        
+        private bool _movementEnabled = true;
+        public bool MovementEnabled 
+        { 
+            get => _movementEnabled; 
+            set 
+            { 
+                _movementEnabled = value;
+                if (!_movementEnabled)
+                {
+                    _player.PlayerAnimator.SetWalking(false);
+                }
+            } 
+        }
+
+        public void SetMovementEnabled(bool enabled)
+        {
+            MovementEnabled = enabled;
+        }
 
         public override void OnStart()
         {
@@ -24,6 +43,8 @@ namespace RAIL_SHOOTER.PLAYER
         }
         public override void OnFixedUpdate()
         {
+            if (!_movementEnabled) return;
+            
             if(_railTrack == null) return;
             if (!_railTrack.HasNextRail(_currentRailIndex)) return;
 
@@ -39,14 +60,12 @@ namespace RAIL_SHOOTER.PLAYER
             Vector3 directionToNextRail = (nextRailPoint.transform.position - _player.transform.position).normalized;
             if (directionToNextRail != Vector3.zero)
             {
-                // Remove a componente Y para manter o player em pé
                 directionToNextRail.y = 0;
                 directionToNextRail.Normalize();
                 
                 if (directionToNextRail != Vector3.zero)
                 {
                     Quaternion targetRotation = Quaternion.LookRotation(directionToNextRail, Vector3.up);
-                    // Adiciona offset para corrigir orientação do modelo
                     targetRotation *= Quaternion.Euler(0, _modelRotationOffset, 0);
                     
                     _player.transform.rotation = Quaternion.Slerp(
