@@ -265,8 +265,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4016617265394621026}
   - component: {fileID: 4318713844518691725}
-  - component: {fileID: 8492846809630506238}
   - component: {fileID: -1618135014835178856}
+  - component: {fileID: 4293907927538299752}
+  - component: {fileID: 66319664799850363}
   m_Layer: 0
   m_Name: Character_Monster_03
   m_TagString: Untagged
@@ -284,7 +285,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1573606368343535343}
@@ -312,8 +313,34 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!64 &8492846809630506238
-MeshCollider:
+--- !u!114 &-1618135014835178856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243984959253420879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dab6c2cca11b0148a4026b887fb0c0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4293907927538299752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243984959253420879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b60269719582fab4eb2c30e446c4368c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <CurrentHealth>k__BackingField: 0
+  <MaxHealth>k__BackingField: 0
+--- !u!136 &66319664799850363
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -330,23 +357,11 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
---- !u!114 &-1618135014835178856
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1243984959253420879}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9dab6c2cca11b0148a4026b887fb0c0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enableInputTesting: 1
+  serializedVersion: 2
+  m_Radius: 0.97
+  m_Height: 6.19
+  m_Direction: 1
+  m_Center: {x: 0, y: 2.33, z: 0}
 --- !u!1 &1934602905415809293
 GameObject:
   m_ObjectHideFlags: 0
