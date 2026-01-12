@@ -25,7 +25,8 @@ namespace RAIL_SHOOTER.CAMERA
         {
             if (_playerTransform != null)
             {
-                _mainCamera.transform.position = _playerTransform.position + positionOffset;
+                Vector3 rotatedOffset = _playerTransform.rotation * positionOffset;
+                _mainCamera.transform.position = _playerTransform.position + rotatedOffset;
 
                 Vector3 targetEulerAngles = _playerTransform.eulerAngles + rotationOffset;
                 
