@@ -13,8 +13,6 @@ namespace RAIL_SHOOTER.ENEMY
         [Header("Enemy States")]
         private EnemyState _currentState;
         private EnemyIdle _idleState = new EnemyIdle();
-        private EnemyWalking _walkingState = new EnemyWalking();
-        private EnemyRunning _runningState = new EnemyRunning();
         private EnemyScream _screamState = new EnemyScream();
         private EnemyDeath _deathState = new EnemyDeath();
         private EnemyAttack _attackState = new EnemyAttack();
@@ -46,8 +44,6 @@ namespace RAIL_SHOOTER.ENEMY
         #region Properties
         public EnemyAnimator Animator => _animator;
         public EnemyState IdleState => _idleState;
-        public EnemyState WalkingState => _walkingState;
-        public EnemyState RunningState => _runningState;
         public EnemyState ScreamState => _screamState;
         public EnemyState DeathState => _deathState;
         public EnemyState AttackState => _attackState;

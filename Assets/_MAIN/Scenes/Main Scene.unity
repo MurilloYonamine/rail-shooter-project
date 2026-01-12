@@ -930,6 +930,70 @@ PrefabInstance:
       propertyPath: _playerAnimator._footstepInterval
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.size
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 233a6b7bc9e27e049b7439920b115c73, type: 3}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: b7b4af7db22d33643b4d90d4adebd532, type: 3}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 28e715192a57e814e92e22f30319db42, type: 3}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: dba0844634a77b74d8cb1ab958b2f6e0, type: 3}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[4]
+      value: 
+      objectReference: {fileID: 8300000, guid: b3a5ac5b1e08f104c85a5b7ed3887fde, type: 3}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[5]
+      value: 
+      objectReference: {fileID: 8300000, guid: b2c9cf49207e2ba4a8f8208c8be637fc, type: 3}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[6]
+      value: 
+      objectReference: {fileID: 8300000, guid: afdee31e621809c4a8a3afd953712e71, type: 3}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[7]
+      value: 
+      objectReference: {fileID: 8300000, guid: 57fb6d8d66fd43b4da7f025ad28d1cec, type: 3}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[8]
+      value: 
+      objectReference: {fileID: 8300000, guid: ca9d23ae6b4b8794ba80710e0a6fc911, type: 3}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[9]
+      value: 
+      objectReference: {fileID: 8300000, guid: 54941d58cb763e94db561a011cbfee11, type: 3}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[10]
+      value: 
+      objectReference: {fileID: 8300000, guid: 6e2e47a615d638a489dce3f2a0127072, type: 3}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[11]
+      value: 
+      objectReference: {fileID: 8300000, guid: 31483f0c00f876b4da053caae33d2480, type: 3}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[12]
+      value: 
+      objectReference: {fileID: 8300000, guid: f43ce90ff9f3da846af05fc0b0d2d8a0, type: 3}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[13]
+      value: 
+      objectReference: {fileID: 8300000, guid: 59154f095ea7e484c89220e81478b122, type: 3}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerAnimator._footstepSounds.Array.data[14]
+      value: 
+      objectReference: {fileID: 8300000, guid: bec7a3a7740e04b419431247f18ac66c, type: 3}
     - target: {fileID: 7126513149828507295, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
       propertyPath: m_Name
       value: Player
