@@ -133,24 +133,15 @@ namespace RAIL_SHOOTER.ENEMY
         #endregion
 
         #region Player Movement Control
-        private bool _playerMovementDisabled = false;
-        
+        // Controle centralizado via GameManager
         public void DisablePlayerMovement()
         {
-            if (_playerController != null && !_playerMovementDisabled)
-            {
-                _playerController.PlayerMovement.SetMovementEnabled(false);
-                _playerMovementDisabled = true;
-            }
+            RAIL_SHOOTER.MANAGERS.GameManager.Instance?.EnemyStartedScreaming();
         }
-        
+
         public void EnablePlayerMovement()
         {
-            if (_playerController != null && _playerMovementDisabled)
-            {
-                _playerController.PlayerMovement.SetMovementEnabled(true);
-                _playerMovementDisabled = false;
-            }
+            RAIL_SHOOTER.MANAGERS.GameManager.Instance?.EnemyStoppedScreaming();
         }
         #endregion
         private void OnDrawGizmosSelected()

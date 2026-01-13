@@ -33,7 +33,8 @@ namespace RAIL_SHOOTER.ENEMY
 
             if (IsDead())
             {
-                _enemy.EnablePlayerMovement();
+                RAIL_SHOOTER.MANAGERS.GameManager.Instance?.EnemyStoppedScreaming();
+                _enemy.EnablePlayerMovement(); // opcional, pode ser removido se não quiser redundância
                 _enemy.ChangeState(_enemy.DeathState);
                 CurrentHealth = 0;
                 StartCoroutine(DisableObject());
