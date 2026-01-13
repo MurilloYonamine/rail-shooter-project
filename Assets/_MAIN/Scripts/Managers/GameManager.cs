@@ -1,5 +1,6 @@
 using RAIL_SHOOTER.PLAYER;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace RAIL_SHOOTER.MANAGERS
 {
@@ -71,7 +72,7 @@ namespace RAIL_SHOOTER.MANAGERS
 
         private void EndGame()
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(_endGameSceneName);
+            SceneManager.LoadScene(_endGameSceneName);
         }
         public AudioClip GetRandomFootstepSound()
         {

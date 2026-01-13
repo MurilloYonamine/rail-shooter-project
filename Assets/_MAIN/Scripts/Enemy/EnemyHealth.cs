@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using RAIL_SHOOTER.MANAGERS;
 using RAIL_SHOOTER.UTILITIES;
 using UnityEngine;
 
@@ -33,9 +34,11 @@ namespace RAIL_SHOOTER.ENEMY
 
             if (IsDead())
             {
-                RAIL_SHOOTER.MANAGERS.GameManager.Instance?.EnemyStoppedScreaming();
-                _enemy.EnablePlayerMovement(); // opcional, pode ser removido se não quiser redundância
+                GameManager.Instance?.EnemyStoppedScreaming();
+
+                _enemy.EnablePlayerMovement(); 
                 _enemy.ChangeState(_enemy.DeathState);
+                
                 CurrentHealth = 0;
                 StartCoroutine(DisableObject());
                 return;

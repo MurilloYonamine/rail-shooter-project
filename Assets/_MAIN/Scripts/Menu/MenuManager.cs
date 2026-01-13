@@ -149,12 +149,12 @@ namespace RAIL_SHOOTER.MENU
             if (menuType == MenuType.Pause && menuParent != null)
             {
                 menuParent.SetActive(false);
-                
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Confined;
                 if (_pauseController != null)
                 {
                     _pauseController.RequestResume();
                 }
-                
                 Debug.Log("[MenuManager] Voltando para o jogo");
             }
         }
@@ -165,6 +165,8 @@ namespace RAIL_SHOOTER.MENU
             {
                 menuParent.SetActive(true);
                 ChangeState(_mainMenu);
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
                 Debug.Log("[MenuManager] Menu de pause ativado");
             }
         }

@@ -1,4 +1,5 @@
 using RAIL_SHOOTER.AUDIO;
+using RAIL_SHOOTER.MANAGERS;
 using RAIL_SHOOTER.PLAYER;
 using UnityEngine;
 using UnityEngine.AI;
@@ -133,15 +134,14 @@ namespace RAIL_SHOOTER.ENEMY
         #endregion
 
         #region Player Movement Control
-        // Controle centralizado via GameManager
         public void DisablePlayerMovement()
         {
-            RAIL_SHOOTER.MANAGERS.GameManager.Instance?.EnemyStartedScreaming();
+            GameManager.Instance?.EnemyStartedScreaming();
         }
 
         public void EnablePlayerMovement()
         {
-            RAIL_SHOOTER.MANAGERS.GameManager.Instance?.EnemyStoppedScreaming();
+            GameManager.Instance?.EnemyStoppedScreaming();
         }
         #endregion
         private void OnDrawGizmosSelected()
