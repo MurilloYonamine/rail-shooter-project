@@ -38,21 +38,18 @@ namespace RAIL_SHOOTER.AUDIO
 
             transform.SetParent(null);
             DontDestroyOnLoad(gameObject);
-        }
-        private void Start()
-        {
+
             _sfxAudioObject = new GameObject("SFX");
             _sfxAudioObject.transform.parent = transform;
 
             _musicAudioObject = new GameObject("Music");
             _musicAudioObject.transform.parent = transform;
         }
-        
-        public void PlaySFX(AudioClip clip, float volume = 1f, float pitch = 1f)
+        public void PlaySFX(AudioClip clip, float volume = 1f, float pitch = 1f, float blend = 0f)
         {
             GameObject audioObject = CreateAudioObject($"SFX - {clip.name}", _sfxAudioObject.transform);
             AudioSource audioSource = audioObject.GetComponent<AudioSource>();
-            
+
             audioSource.clip = clip;
             audioSource.pitch = pitch;
             audioSource.volume = volume;
@@ -62,21 +59,21 @@ namespace RAIL_SHOOTER.AUDIO
 
             Destroy(audioObject, clip.length);
         }
-        
+
         public void PlaySFX(string sfxName, float volume = 1f)
         {
             string sfxPath = SFX_FOLDER_PATH + sfxName;
             AudioClip clip = Resources.Load<AudioClip>(sfxPath);
-            
+
             if (clip == null)
             {
                 Debug.LogWarning($"AudioClip não encontrado: {sfxPath}");
                 return;
             }
-            
+
             GameObject audioObject = CreateAudioObject($"SFX - {clip.name}", _sfxAudioObject.transform);
             AudioSource audioSource = audioObject.GetComponent<AudioSource>();
-            
+
             audioSource.clip = clip;
             audioSource.volume = volume;
             audioSource.spatialBlend = 0f;
@@ -103,11 +100,11 @@ namespace RAIL_SHOOTER.AUDIO
             if (!loop)
                 Destroy(audioObject, clip.length);
         }
-        
+
         public void PlayMusic(AudioClip clip, float volume = 1f, bool loop = true)
         {
             StopAllMusic();
-            
+
             GameObject audioObject = CreateAudioObject($"Music - {clip.name}", _musicAudioObject.transform);
             AudioSource audioSource = audioObject.GetComponent<AudioSource>();
 
@@ -121,7 +118,7 @@ namespace RAIL_SHOOTER.AUDIO
         {
             string songPath = MUSIC_FOLDER_PATH + songName;
             AudioClip clip = Resources.Load<AudioClip>(songPath);
-            
+
             if (clip == null)
             {
                 Debug.LogWarning($"AudioClip de música não encontrado: {songPath}");
@@ -141,7 +138,7 @@ namespace RAIL_SHOOTER.AUDIO
         }
         public void StopMusic(string songName) => StopAudio(songName, _musicAudioObject);
         public void StopSFX(string sfxName) => StopAudio(sfxName, _sfxAudioObject);
-        
+
         public void StopAllMusic()
         {
             AudioSource[] audioSources = _musicAudioObject.GetComponentsInChildren<AudioSource>();
@@ -153,7 +150,7 @@ namespace RAIL_SHOOTER.AUDIO
                 }
             }
         }
-        
+
         public void StopAllSFX()
         {
             AudioSource[] audioSources = _sfxAudioObject.GetComponentsInChildren<AudioSource>();

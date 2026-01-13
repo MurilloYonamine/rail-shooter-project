@@ -18,6 +18,13 @@ namespace RAIL_SHOOTER.ENEMY
         [SerializeField, Range(0.5f, 15f)] private float _attackDistance = 2f;
         [SerializeField, Range(0.5f, 15f)] private float _chaseMultiplicator = 2f;
         [SerializeField] private LayerMask _playerLayer = ~3;
+        
+        [Header("Attack Settings")]
+        [SerializeField, Range(1, 50)] private int _attackDamage = 15;
+        [SerializeField, Range(1f, 5f)] private float _attackRange = 3f;
+        
+        [Header("Player Reference")]
+        [SerializeField] private PlayerController _playerController;
 
         private EnemyState _currentState;
         private EnemyIdle _idleState = new EnemyIdle();
@@ -54,7 +61,6 @@ namespace RAIL_SHOOTER.ENEMY
                 if (randomHitSound != null)
                 {
                     AudioManager.Instance.PlaySFX(randomHitSound, volume: 1f);
-                    Debug.Log("[EnemyController] Played attack hit sound");
                 }
             }
         }
@@ -76,7 +82,20 @@ namespace RAIL_SHOOTER.ENEMY
         }
         private void Start()
         {
+            SetupPlayerReferences();
             ChangeState(_patrolState);
+        }
+        
+        private void SetupPlayerReferences()
+        {
+            if (_playerController == null)
+            {
+                GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+                if (playerObj != null)
+                {
+                    _playerController = playerObj.GetComponent<PlayerController>();
+                }
+            }
         }
         private void Update()
         {
@@ -105,24 +124,19 @@ namespace RAIL_SHOOTER.ENEMY
         public float AttackDistance => _attackDistance;
         public LayerMask PlayerLayer => _playerLayer;
         public float ChaseMultiplicator => _chaseMultiplicator;
+        public int AttackDamage => _attackDamage;
+        public float AttackRange => _attackRange;
+        public Transform Player => _playerController?.transform;
+        public PlayerController PlayerController => _playerController;
+        public PlayerHealth PlayerHealth => _playerController?.GetComponent<PlayerHealth>();
 
         #endregion
 
         #region Player Movement Control
-        private PlayerController _playerController;
         private bool _playerMovementDisabled = false;
         
         public void DisablePlayerMovement()
         {
-            if (_playerController == null)
-            {
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                if (player != null)
-                {
-                    _playerController = player.GetComponent<PlayerController>();
-                }
-            }
-            
             if (_playerController != null && !_playerMovementDisabled)
             {
                 _playerController.PlayerMovement.SetMovementEnabled(false);
@@ -139,12 +153,11 @@ namespace RAIL_SHOOTER.ENEMY
             }
         }
         #endregion
-
         private void OnDrawGizmosSelected()
         {
             if (_currentState == _patrolState && _patrolState != null)
             {
-                ((EnemyPatrol)_patrolState).DrawPatrolAreaGizmo();
+                _patrolState.DrawPatrolAreaGizmo();
             }
             else
             {

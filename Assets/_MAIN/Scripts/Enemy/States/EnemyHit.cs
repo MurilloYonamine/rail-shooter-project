@@ -25,8 +25,6 @@ namespace RAIL_SHOOTER.ENEMY
             _enemy.Animator.PlayHitAnimation();
             
             _hitAnimationDuration = 0.5f;
-            
-            Debug.Log("[EnemyHit] Entered hit state");
         }
 
         public override void ExitState()
@@ -35,8 +33,6 @@ namespace RAIL_SHOOTER.ENEMY
             {
                 _enemy.Agent.isStopped = false;
             }
-            
-            _enemy.Animator.ResetAllAnimations();
         }
 
         public override void UpdateState()
@@ -48,10 +44,9 @@ namespace RAIL_SHOOTER.ENEMY
             
             if (timerReached || timeoutReached)
             {
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                if (player != null)
+                if (_enemy.Player != null)
                 {
-                    float distanceToPlayer = Vector3.Distance(_enemy.transform.position, player.transform.position);
+                    float distanceToPlayer = Vector3.Distance(_enemy.transform.position, _enemy.Player.position);
                     
                     if (distanceToPlayer <= _enemy.AttackDistance + 1f)
                     {

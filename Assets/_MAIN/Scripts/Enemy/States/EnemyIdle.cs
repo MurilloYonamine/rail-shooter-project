@@ -8,8 +8,7 @@ namespace RAIL_SHOOTER.ENEMY
         public override void EnterState(EnemyController enemy)
         {
             _enemy = enemy;
-            _enemy.Animator.SetIdle(true);
-            Debug.Log("[EnemyIdle] Entered idle state");
+            _enemy.Animator.SetIdleState();
         }
 
         public override void ExitState()

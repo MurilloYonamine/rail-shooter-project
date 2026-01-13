@@ -16,6 +16,7 @@ namespace RAIL_SHOOTER.ENEMY
             _enemy = enemy;
             
             _enemy.Animator.ResetAllAnimations();
+            _enemy.Animator.SetIdle(false);
             _enemy.Animator.SetWalking(true);
             _enemy.Agent.isStopped = false;
             

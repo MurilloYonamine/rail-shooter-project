@@ -18,6 +18,7 @@ namespace RAIL_SHOOTER.ENEMY
             _enemy.Agent.speed = _chaseSpeed;
             
             _enemy.Animator.ResetAllAnimations();
+            _enemy.Animator.SetIdle(false);
             
             _enemy.Animator.ForceRunningState();
             
@@ -65,6 +66,12 @@ namespace RAIL_SHOOTER.ENEMY
 
         private void FindPlayer()
         {
+            if (_enemy.Player != null)
+            {
+                _playerTarget = _enemy.Player;
+                return;
+            }
+            
             Collider[] players = Physics.OverlapSphere(
                 _enemy.transform.position, 
                 50f, 

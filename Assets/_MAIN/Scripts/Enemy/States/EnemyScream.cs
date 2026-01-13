@@ -63,6 +63,12 @@ namespace RAIL_SHOOTER.ENEMY
         
         private void FindPlayer()
         {
+            if (_enemy.Player != null)
+            {
+                _playerTarget = _enemy.Player;
+                return;
+            }
+            
             Collider[] players = Physics.OverlapSphere(
                 _enemy.transform.position, 
                 100f, 
@@ -72,12 +78,6 @@ namespace RAIL_SHOOTER.ENEMY
             {
                 _playerTarget = players[0].transform;
                 return;
-            }
-            
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-            {
-                _playerTarget = player.transform;
             }
         }
         

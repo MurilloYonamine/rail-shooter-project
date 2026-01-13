@@ -14,6 +14,7 @@ namespace RAIL_SHOOTER.PLAYER
         [SerializeField] private PlayerShoot _playerShoot;
         [SerializeField] private PlayerAnimator _playerAnimator;
         [SerializeField] private PlayerAudio _playerAudio;
+        
 
         private InputReader _inputReader;
 
