@@ -4,13 +4,10 @@ namespace RAIL_SHOOTER.ENEMY
 {
     public class EnemyDeath : EnemyState
     {
-        private EnemyController _enemy;
         
         public override void EnterState(EnemyController enemy)
         {
-            _enemy = enemy;
-            _enemy.Animator.PlayDeathAnimation();
-            Debug.Log("[EnemyDeath] Entered death state");
+            base.EnterState(enemy);
         }
 
         public override void ExitState()

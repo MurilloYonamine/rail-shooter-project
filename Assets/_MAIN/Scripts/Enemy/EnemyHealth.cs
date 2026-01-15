@@ -14,7 +14,7 @@ namespace RAIL_SHOOTER.ENEMY
         [field: SerializeField] public int MaxHealth { get; set; }
         private Collider _collider;
 
-        [SerializeField] private float _timeToDisable = 9f;
+        [SerializeField, Range(1f, 10f)] private float _timeToDisable = 9f;
 
         private void Awake()
         {
@@ -34,9 +34,6 @@ namespace RAIL_SHOOTER.ENEMY
 
             if (IsDead())
             {
-                GameManager.Instance?.EnemyStoppedScreaming();
-
-                _enemy.EnablePlayerMovement(); 
                 _enemy.ChangeState(_enemy.DeathState);
                 
                 CurrentHealth = 0;

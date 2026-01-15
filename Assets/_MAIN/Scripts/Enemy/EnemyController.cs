@@ -76,10 +76,10 @@ namespace RAIL_SHOOTER.ENEMY
             _agent = GetComponent<NavMeshAgent>();
             _health = GetComponent<EnemyHealth>();
 
-
             _agent.speed = _movementSpeed;
-            Animator animatorComponent = GetComponent<Animator>();
-            _animator = new EnemyAnimator(animatorComponent);
+            
+            var animator = GetComponent<Animator>();
+            _animator = new EnemyAnimator(animator);
         }
         private void Start()
         {
@@ -132,18 +132,7 @@ namespace RAIL_SHOOTER.ENEMY
         public PlayerHealth PlayerHealth => _playerController?.GetComponent<PlayerHealth>();
 
         #endregion
-
-        #region Player Movement Control
-        public void DisablePlayerMovement()
-        {
-            GameManager.Instance?.EnemyStartedScreaming();
-        }
-
-        public void EnablePlayerMovement()
-        {
-            GameManager.Instance?.EnemyStoppedScreaming();
-        }
-        #endregion
+        
         private void OnDrawGizmosSelected()
         {
             if (_currentState == _patrolState && _patrolState != null)
