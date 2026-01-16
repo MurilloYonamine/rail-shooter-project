@@ -20,11 +20,6 @@ namespace RAIL_SHOOTER.AUDIO
         private const string SFX_VOLUME_KEY = "SFXVolume";
         private const string MUSIC_VOLUME_KEY = "MusicVolume";
 
-        // Mixer parameter names
-        private const string MIXER_MASTER_PARAM = "MasterVolume";
-        private const string MIXER_SFX_PARAM = "SFXVolume";
-        private const string MIXER_MUSIC_PARAM = "MusicVolume";
-
         private void Awake()
         {
             if (Instance != null)
@@ -33,6 +28,8 @@ namespace RAIL_SHOOTER.AUDIO
                 return;
             }
             Instance = this;
+
+            transform.parent = null;
             DontDestroyOnLoad(gameObject);
             
             LoadAudioSettings();
@@ -46,27 +43,27 @@ namespace RAIL_SHOOTER.AUDIO
         public void SetMasterVolume(int level)
         {
             masterVolumeLevel = Mathf.Clamp(level, 0, 7);
-            ApplyVolumeToMixer(masterVolumeLevel, MIXER_MASTER_PARAM);
+            ApplyVolumeToMixer(masterVolumeLevel, MASTER_VOLUME_KEY);
             SaveAudioSettings();
         }
 
         public void SetSFXVolume(int level)
         {
             sfxVolumeLevel = Mathf.Clamp(level, 0, 7);
-            ApplyVolumeToMixer(sfxVolumeLevel, MIXER_SFX_PARAM);
+            ApplyVolumeToMixer(sfxVolumeLevel, SFX_VOLUME_KEY);
             SaveAudioSettings();
         }
 
         public void SetMusicVolume(int level)
         {
             musicVolumeLevel = Mathf.Clamp(level, 0, 7);
-            ApplyVolumeToMixer(musicVolumeLevel, MIXER_MUSIC_PARAM);
+            ApplyVolumeToMixer(musicVolumeLevel, MUSIC_VOLUME_KEY);
             SaveAudioSettings();
         }
 
         private void ApplyVolumeToMixer(int volumeLevel, string parameterName)
         {
-            if (mainAudioMixer == null) return;
+            if (!mainAudioMixer) return;
 
             float volumeDb;
             if (volumeLevel == 0)
@@ -83,9 +80,9 @@ namespace RAIL_SHOOTER.AUDIO
 
         private void ApplyAllVolumeSettings()
         {
-            ApplyVolumeToMixer(masterVolumeLevel, MIXER_MASTER_PARAM);
-            ApplyVolumeToMixer(sfxVolumeLevel, MIXER_SFX_PARAM);
-            ApplyVolumeToMixer(musicVolumeLevel, MIXER_MUSIC_PARAM);
+            ApplyVolumeToMixer(masterVolumeLevel, MASTER_VOLUME_KEY);
+            ApplyVolumeToMixer(sfxVolumeLevel, SFX_VOLUME_KEY);
+            ApplyVolumeToMixer(musicVolumeLevel, MUSIC_VOLUME_KEY);
         }
 
         private void LoadAudioSettings()
