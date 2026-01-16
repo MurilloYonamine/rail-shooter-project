@@ -21,13 +21,12 @@ namespace RAIL_SHOOTER.PLAYER
         [Header("Ammunition")]
         [SerializeField] private int _maxAmmo = 6;
         [SerializeField] private float _reloadTime = 2f;
-        private int _currentAmmo;
-        private bool _isReloading;
 
-        public int CurrentAmmo => _currentAmmo;
+        public int CurrentAmmo { get; private set; }
+        public bool IsReloading { get; private set; }
+
         public int MaxAmmo => _maxAmmo;
-        public bool IsReloading => _isReloading;
-        public bool HasAmmo => _currentAmmo > 0;
+        public bool HasAmmo => CurrentAmmo > 0;
 
         public event Action OnAmmoChanged;
         public event Action OnReloadStarted;
@@ -41,7 +40,7 @@ namespace RAIL_SHOOTER.PLAYER
 
         public override void OnStart()
         {
-            _currentAmmo = _maxAmmo;
+            CurrentAmmo = _maxAmmo;
             OnAmmoChanged?.Invoke();
         }
 
@@ -61,12 +60,12 @@ namespace RAIL_SHOOTER.PLAYER
 
         private void OnFirePressed()
         {
-            if (HasAmmo && !_isReloading && _player.CanShoot)
+            if (HasAmmo && !IsReloading && _player.CanShoot)
             {
                 Shoot();
                 OnShootSuccessful?.Invoke();
             }
-            else if (!HasAmmo && !_isReloading)
+            else if (!HasAmmo && !IsReloading)
             {
                 OnShootFailed?.Invoke(); 
                 StartReload();
@@ -79,7 +78,7 @@ namespace RAIL_SHOOTER.PLAYER
 
         private void OnReloadPressed()
         {
-            if (!_isReloading && _currentAmmo < _maxAmmo)
+            if (!IsReloading && CurrentAmmo < _maxAmmo)
             {
                 StartReload();
             }
@@ -99,24 +98,24 @@ namespace RAIL_SHOOTER.PLAYER
 
             Debug.DrawRay(_shootPoint.position, shootDirection * 10f, Color.red, 1f);
 
-            Quaternion rotationOffset = Quaternion.Euler(0f, 90f, 0f);
-            Quaternion bulletRotation = Quaternion.LookRotation(shootDirection) * rotationOffset;
+            var rotationOffset = Quaternion.Euler(0f, 90f, 0f);
+            var bulletRotation = Quaternion.LookRotation(shootDirection) * rotationOffset;
 
-            PlayerBullet bullet = BulletPool.Instance.GetBullet();
+            var bullet = BulletPool.Instance.GetBullet();
             bullet.transform.SetPositionAndRotation(_shootPoint.position, bulletRotation);
             bullet.transform.parent = null;
 
-            Rigidbody rigidBody = bullet.GetComponent<Rigidbody>();
+            var rigidBody = bullet.GetComponent<Rigidbody>();
             rigidBody.velocity = Vector3.zero;
             rigidBody.angularVelocity = Vector3.zero;
             rigidBody.AddForce(shootDirection * _shootForce, ForceMode.Impulse);
 
             _player.LastShootTime = Time.time;
 
-            _currentAmmo--;
+            CurrentAmmo--;
             OnAmmoChanged?.Invoke();
 
-            if (_currentAmmo <= 0)
+            if (CurrentAmmo <= 0)
             {
                 StartReload();
             }
@@ -124,7 +123,7 @@ namespace RAIL_SHOOTER.PLAYER
 
         private void StartReload()
         {
-            if (!_isReloading)
+            if (!IsReloading)
             {
                 _player.StartCoroutine(ReloadCoroutine());
             }
@@ -132,14 +131,14 @@ namespace RAIL_SHOOTER.PLAYER
 
         private IEnumerator ReloadCoroutine()
         {
-            _isReloading = true;
+            IsReloading = true;
             _player.SetReloading(true);
             OnReloadStarted?.Invoke();
 
             yield return new WaitForSeconds(_reloadTime);
 
-            _currentAmmo = _maxAmmo;
-            _isReloading = false;
+            CurrentAmmo = _maxAmmo;
+            IsReloading = false;
             _player.SetReloading(false);
             OnAmmoChanged?.Invoke();
             OnReloadFinished?.Invoke();
@@ -152,7 +151,7 @@ namespace RAIL_SHOOTER.PLAYER
             float randomX = UnityEngine.Random.Range(-spreadRad, spreadRad);
             float randomY = UnityEngine.Random.Range(-spreadRad, spreadRad);
             
-            Quaternion spreadRotation = Quaternion.Euler(
+            var spreadRotation = Quaternion.Euler(
                 randomY * Mathf.Rad2Deg, 
                 randomX * Mathf.Rad2Deg, 
                 z: 0

@@ -13,10 +13,6 @@ namespace RAIL_SHOOTER.PLAYER
         [SerializeField] private Animator _armAnimator;
         [SerializeField] private Animator _gunAnimator;
 
-        [Header("Animation Durations (in frames / 60fps)")]
-        [SerializeField] private float _shootAnimationFrames = 14f;
-        [SerializeField] private float _reloadAnimationFrames = 72f;
-
         [Header("Footstep Audio")]
         [SerializeField] private float _footstepInterval = 0.5f;
 
@@ -24,12 +20,10 @@ namespace RAIL_SHOOTER.PLAYER
         private Coroutine _footstepCoroutine;
 
         [Header("Animator Parameters")]
-        private const string ANIMATOR_PARAM_IS_FIRING = "isFiring";
-        private const string ANIMATOR_PARAM_IS_RELOADING = "isReloading";
-        private const string ANIMATOR_PARAM_IS_AIMING = "isAiming";
-        private const string ANIMATOR_PARAM_IS_FIRE_AIMING = "isFireAiming";
-        private const string ANIMATOR_PARAM_IS_WALKING = "isWalking";
-        private const string ANIMATOR_PARAM_WALK_AIMING = "isWalkAiming";
+        private const string ANIMATOR_PARAM_FIRE = "Fire";
+        private const string ANIMATOR_PARAM_RELOAD = "Reload";
+        private const string ANIMATOR_PARAM_IS_AIMING = "IsAiming";
+        private const string ANIMATOR_PARAM_SPEED = "Speed";
 
         public override void OnEnable()
         {
@@ -49,12 +43,12 @@ namespace RAIL_SHOOTER.PLAYER
 
         private void OnShootSuccessful()
         {
-            _player.StartCoroutine(PlayFireAnimation());
+            PlayFireAnimation();
         }
 
         private void OnReloadStarted()
         {
-            _player.StartCoroutine(PlayReloadAnimation());
+            PlayReloadAnimation();
         }
 
         private void OnFireReleased()
@@ -69,63 +63,41 @@ namespace RAIL_SHOOTER.PLAYER
         {
             _player.SetAiming(isAiming);
             _armAnimator?.SetBool(ANIMATOR_PARAM_IS_AIMING, isAiming);
-
-            if (_isWalking)
-            {
-                _armAnimator?.SetBool(ANIMATOR_PARAM_WALK_AIMING, isAiming);
-            }
         }
 
-        private IEnumerator PlayFireAnimation()
+        private void PlayFireAnimation()
         {
             _player.SetFiring(true);
 
-            float animationDuration = _shootAnimationFrames / 60f;
-            string armAnimatorParam = _player.IsAiming ? ANIMATOR_PARAM_IS_FIRE_AIMING : ANIMATOR_PARAM_IS_FIRING;
-
-            _armAnimator?.SetBool(armAnimatorParam, true);
-            _gunAnimator?.SetBool(ANIMATOR_PARAM_IS_FIRING, true);
-
-            yield return new WaitForSeconds(animationDuration);
-
-            _armAnimator?.SetBool(armAnimatorParam, false);
-            _gunAnimator?.SetBool(ANIMATOR_PARAM_IS_FIRING, false);
+            _armAnimator?.SetTrigger(ANIMATOR_PARAM_FIRE);
+            _gunAnimator?.SetTrigger(ANIMATOR_PARAM_FIRE);
 
             _player.SetFiring(false);
         }
 
-        private IEnumerator PlayReloadAnimation()
+        private void PlayReloadAnimation()
         {
             _player.SetReloading(true);
 
-            float animationDuration = _reloadAnimationFrames / 60f;
-
-            _armAnimator?.SetBool(ANIMATOR_PARAM_IS_RELOADING, true);
-            _gunAnimator?.SetBool(ANIMATOR_PARAM_IS_RELOADING, true);
-
-            yield return new WaitForSeconds(animationDuration);
-
-            _armAnimator?.SetBool(ANIMATOR_PARAM_IS_RELOADING, false);
-            _gunAnimator?.SetBool(ANIMATOR_PARAM_IS_RELOADING, false);
+            _armAnimator?.SetTrigger(ANIMATOR_PARAM_RELOAD);
+            _gunAnimator?.SetTrigger(ANIMATOR_PARAM_RELOAD);
 
             _player.SetReloading(false);
         }
-        public void SetWalking(bool isWalking)
+        public void SetWalking(bool isWalking, float speed)
         {
-            _armAnimator?.SetBool(ANIMATOR_PARAM_IS_WALKING, isWalking);
-            _armAnimator?.SetBool(ANIMATOR_PARAM_WALK_AIMING, isWalking && _player.IsAiming);
+            _armAnimator?.SetFloat(ANIMATOR_PARAM_SPEED, speed);
+            
+            if (isWalking == _isWalking) return;
+            
+            _isWalking = isWalking;
 
-            if (isWalking != _isWalking)
+            if (_isWalking)
             {
-                _isWalking = isWalking;
-
-                if (_isWalking)
-                {
-                    StartFootsteps();
-                    return;
-                }
-                StopFootsteps();
+                StartFootsteps();
+                return;
             }
+            StopFootsteps();
         }
 
         private void StartFootsteps()
@@ -139,22 +111,21 @@ namespace RAIL_SHOOTER.PLAYER
 
         private void StopFootsteps()
         {
-            if (_footstepCoroutine != null)
-            {
-                _player.StopCoroutine(_footstepCoroutine);
-                _footstepCoroutine = null;
-            }
+            if (_footstepCoroutine == null) return;
+            
+            _player.StopCoroutine(_footstepCoroutine);
+            _footstepCoroutine = null;
         }
 
         private IEnumerator PlayFootstepsLoop()
         {
             while (_isWalking)
             {
-                if (GameManager.Instance != null)
+                if (GameManager.Instance)
                 {
-                    AudioClip currentFootstep = GameManager.Instance.GetRandomFootstepSound();
+                    var currentFootstep = GameManager.Instance.GetRandomFootstepSound();
                     
-                    if (currentFootstep != null && AudioManager.Instance != null)
+                    if (currentFootstep && AudioManager.Instance)
                     {
                         try
                         {

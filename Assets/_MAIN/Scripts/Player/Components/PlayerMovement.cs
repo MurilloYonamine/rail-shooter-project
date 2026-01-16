@@ -12,7 +12,7 @@ namespace RAIL_SHOOTER.PLAYER
         private Transform _spawnPoint;
         [SerializeField] private float _moveSpeed = 5.0f;
         [SerializeField] private float _rotationSpeed = 5.0f;
-        [SerializeField] private float _modelRotationOffset = 90f; // Ajuste para corrigir orientação do modelo
+        [SerializeField] private float _modelRotationOffset = 90f;
 
         private bool _movementEnabled = true;
         public bool MovementEnabled
@@ -23,7 +23,7 @@ namespace RAIL_SHOOTER.PLAYER
                 _movementEnabled = value;
                 if (!_movementEnabled)
                 {
-                    _player.PlayerAnimator.SetWalking(false);
+                    _player.PlayerAnimator.SetWalking(false, 0f);
                 }
             }
         }
@@ -35,7 +35,8 @@ namespace RAIL_SHOOTER.PLAYER
 
         public override void OnStart()
         {
-            if (_railTrack == null) return;
+            if (!_railTrack) return;
+            
             RailPoint railSpawnPoint = _railTrack.GetFirstRail();
             _spawnPoint = railSpawnPoint.transform;
 
@@ -46,11 +47,11 @@ namespace RAIL_SHOOTER.PLAYER
         {
             if (!_movementEnabled) return;
 
-            if (_railTrack == null) return;
+            if (!_railTrack) return;
             if (!_railTrack.HasNextRail(_currentRailIndex)) return;
 
             int nextRailIndex = _currentRailIndex + 1;
-            RailPoint nextRailPoint = _railTrack.GetRailPerIndex(nextRailIndex);
+            var nextRailPoint = _railTrack.GetRailPerIndex(nextRailIndex);
 
             _player.transform.position = Vector3.MoveTowards(
                 _player.transform.position,
@@ -59,6 +60,7 @@ namespace RAIL_SHOOTER.PLAYER
             );
 
             Vector3 directionToNextRail = (nextRailPoint.transform.position - _player.transform.position).normalized;
+            
             if (directionToNextRail != Vector3.zero)
             {
                 directionToNextRail.y = 0;
@@ -66,7 +68,7 @@ namespace RAIL_SHOOTER.PLAYER
 
                 if (directionToNextRail != Vector3.zero)
                 {
-                    Quaternion targetRotation = Quaternion.LookRotation(directionToNextRail, Vector3.up);
+                    var targetRotation = Quaternion.LookRotation(directionToNextRail, Vector3.up);
                     targetRotation *= Quaternion.Euler(0, _modelRotationOffset, 0);
 
                     _player.transform.rotation = Quaternion.Slerp(
@@ -77,26 +79,23 @@ namespace RAIL_SHOOTER.PLAYER
                 }
             }
 
-            _player.PlayerAnimator.SetWalking(true);
+            _player.PlayerAnimator.SetWalking(true, _moveSpeed);
 
             float distance = Vector3.Distance(_player.transform.position, nextRailPoint.transform.position);
 
-            if (distance <= 0.01f)
+            if (!(distance <= 0.01f)) return;
+            
+            RailPoint currentRailPoint = _railTrack.GetRailPerIndex(_currentRailIndex);
+
+            if (_railTrack.HasNextRail(_currentRailIndex))
             {
-                RailPoint currentRailPoint = _railTrack.GetRailPerIndex(_currentRailIndex);
-
-                if (_railTrack.HasNextRail(_currentRailIndex))
-                {
-                    _currentRailIndex++;
-                }
-
-                if (currentRailPoint.Type == RailPoint.WaypointType.Pause)
-                {
-                    Debug.Log("Pause at rail point");
-                    _moveSpeed = 0f;
-                    _player.PlayerAnimator.SetWalking(false);
-                }
+                _currentRailIndex++;
             }
+
+            if (currentRailPoint.Type != RailPoint.WaypointType.Pause) return;
+            
+            _moveSpeed = 0f;
+            _player.PlayerAnimator.SetWalking(false, _moveSpeed);
         }
         public void SetMovementLocked(bool locked)
         {
