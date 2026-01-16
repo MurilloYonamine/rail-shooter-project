@@ -15,29 +15,29 @@ namespace RAIL_SHOOTER.PLAYER
 
         public override void OnEnable()
         {
-            _player.PlayerShoot.OnShootSuccessful += OnShootSuccessful;
-            _player.PlayerShoot.OnShootFailed += OnShootFailed;
-            _player.PlayerShoot.OnReloadStarted += OnReloadStarted;
+            _player.PlayerGun.OnShootSuccessful += OnGunSuccessful;
+            _player.PlayerGun.OnShootFailed += OnGunFailed;
+            _player.PlayerGun.OnReloadStarted += OnReloadStarted;
             _player.OnPlayerAimPressed += OnAimPressed;
             _player.OnPlayerAimReleased += OnAimReleased;
         }
 
         public override void OnDisable()
         {
-            _player.PlayerShoot.OnShootSuccessful -= OnShootSuccessful;
-            _player.PlayerShoot.OnShootFailed -= OnShootFailed;
-            _player.PlayerShoot.OnReloadStarted -= OnReloadStarted;
+            _player.PlayerGun.OnShootSuccessful -= OnGunSuccessful;
+            _player.PlayerGun.OnShootFailed -= OnGunFailed;
+            _player.PlayerGun.OnReloadStarted -= OnReloadStarted;
             _player.OnPlayerAimPressed -= OnAimPressed;
             _player.OnPlayerAimReleased -= OnAimReleased;
         }
 
-        private void OnShootSuccessful()
+        private void OnGunSuccessful()
         {
             if(_fireSound == null) return;
             AudioManager.Instance.PlaySFX(_fireSound, volume: 0.4f);
         }
 
-        private void OnShootFailed()
+        private void OnGunFailed()
         {
             if(_emptyGunSound == null) return;
             AudioManager.Instance.PlaySFX(_emptyGunSound, volume: 0.3f);

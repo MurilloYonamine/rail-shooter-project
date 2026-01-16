@@ -13,18 +13,18 @@ namespace RAIL_SHOOTER.UI
         [Header("Player Reference")]
         [SerializeField] private PlayerController _player;
 
-        private PlayerShoot _playerShoot;
+        private PlayerGun _playerGun;
 
         private void Start()
         {
             _player = GetComponent<PlayerController>();
-            _playerShoot = _player.PlayerShoot;
+            _playerGun = _player.PlayerGun;
 
-            if (_playerShoot != null)
+            if (_playerGun != null)
             {
-                _playerShoot.OnAmmoChanged += UpdateAmmoDisplay;
-                _playerShoot.OnReloadStarted += OnReloadStarted;
-                _playerShoot.OnReloadFinished += OnReloadFinished;
+                _playerGun.OnAmmoChanged += UpdateAmmoDisplay;
+                _playerGun.OnReloadStarted += OnReloadStarted;
+                _playerGun.OnReloadFinished += OnReloadFinished;
 
                 UpdateAmmoDisplay();
             }
@@ -32,16 +32,16 @@ namespace RAIL_SHOOTER.UI
 
         private void OnDestroy()
         {
-            _playerShoot.OnAmmoChanged -= UpdateAmmoDisplay;
-            _playerShoot.OnReloadStarted -= OnReloadStarted;
-            _playerShoot.OnReloadFinished -= OnReloadFinished;
+            _playerGun.OnAmmoChanged -= UpdateAmmoDisplay;
+            _playerGun.OnReloadStarted -= OnReloadStarted;
+            _playerGun.OnReloadFinished -= OnReloadFinished;
         }
 
         private void UpdateAmmoDisplay()
         {
-            if (_ammoText != null && _playerShoot != null)
+            if (_ammoText != null && _playerGun != null)
             {
-                _ammoText.text = $"{_playerShoot.CurrentAmmo:00}/{_playerShoot.MaxAmmo:00}";
+                _ammoText.text = $"{_playerGun.CurrentAmmo:00}/{_playerGun.MaxAmmo:00}";
             }
         }
 

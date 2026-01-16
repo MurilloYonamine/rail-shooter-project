@@ -31,12 +31,11 @@ namespace RAIL_SHOOTER.PLAYER
         private Vector2 _currentAimInput;
         private Vector2 _aimVelocity;
         private Vector3 _originalArmsRotation;
-        
-        private float _aimTransitionProgress = 0f;
+
         private float _currentSensitivityMultiplier = 1f;
 
-        public float AimProgress => _aimTransitionProgress;
-        
+        public float AimProgress { get; private set; } = 0f;
+
 
         #region Unity Lifecycle
 
@@ -118,13 +117,13 @@ namespace RAIL_SHOOTER.PLAYER
         {
             float targetProgress = _player.IsAiming ? 1f : 0f;
             
-            _aimTransitionProgress = Mathf.MoveTowards(
-                _aimTransitionProgress, 
+            AimProgress = Mathf.MoveTowards(
+                AimProgress, 
                 targetProgress, 
                 _aimTransitionSpeed * Time.deltaTime
             );
 
-            float curveValue = _aimTransitionCurve.Evaluate(_aimTransitionProgress);
+            float curveValue = _aimTransitionCurve.Evaluate(AimProgress);
             
             _currentSensitivityMultiplier = Mathf.Lerp(
                 a: 1f, 
@@ -151,7 +150,7 @@ namespace RAIL_SHOOTER.PLAYER
                 }
 
                 Color color = _crosshairImage.color;
-                color.a = Mathf.Lerp(0.7f, 1f, _aimTransitionProgress);
+                color.a = Mathf.Lerp(0.7f, 1f, AimProgress);
                 _crosshairImage.color = color;
             }
         }

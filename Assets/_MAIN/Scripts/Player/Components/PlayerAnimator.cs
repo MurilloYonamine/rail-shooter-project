@@ -27,21 +27,21 @@ namespace RAIL_SHOOTER.PLAYER
 
         public override void OnEnable()
         {
-            _player.PlayerShoot.OnShootSuccessful += OnShootSuccessful;
-            _player.PlayerShoot.OnReloadStarted += OnReloadStarted;
+            _player.PlayerGun.OnShootSuccessful += OnGunSuccessful;
+            _player.PlayerGun.OnReloadStarted += OnReloadStarted;
             _player.OnPlayerAimPressed += OnAimPressed;
             _player.OnPlayerAimReleased += OnAimReleased;
         }
 
         public override void OnDisable()
         {
-            _player.PlayerShoot.OnShootSuccessful -= OnShootSuccessful;
-            _player.PlayerShoot.OnReloadStarted -= OnReloadStarted;
+            _player.PlayerGun.OnShootSuccessful -= OnGunSuccessful;
+            _player.PlayerGun.OnReloadStarted -= OnReloadStarted;
             _player.OnPlayerAimPressed -= OnAimPressed;
             _player.OnPlayerAimReleased -= OnAimReleased;
         }
 
-        private void OnShootSuccessful()
+        private void OnGunSuccessful()
         {
             PlayFireAnimation();
         }
