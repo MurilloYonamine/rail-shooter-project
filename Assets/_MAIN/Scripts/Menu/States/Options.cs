@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
@@ -8,41 +9,43 @@ namespace RAIL_SHOOTER.MENU
     public class Options : MenuState
     {
         [Header("Master Volume Controls")]
-        [SerializeField] private Button masterVolumeDownButton;
-        [SerializeField] private Button masterVolumeUpButton;
-        [SerializeField] private Image[] masterVolumeIndicators = new Image[7];
+        [SerializeField] private Button _masterVolumeDownButton;
+        [SerializeField] private Button _masterVolumeUpButton;
+        [SerializeField] private Image[] _masterVolumeIndicators = new Image[7];
 
         [Header("SFX Volume Controls")]
-        [SerializeField] private Button sfxVolumeDownButton;
-        [SerializeField] private Button sfxVolumeUpButton;
-        [SerializeField] private Image[] sfxVolumeIndicators = new Image[7];
+        [SerializeField] private Button _sfxVolumeDownButton;
+        [SerializeField] private Button _sfxVolumeUpButton;
+        [SerializeField] private Image[] _sfxVolumeIndicators = new Image[7];
 
         [Header("Music Volume Controls")]
-        [SerializeField] private Button musicVolumeDownButton;
-        [SerializeField] private Button musicVolumeUpButton;
-        [SerializeField] private Image[] musicVolumeIndicators = new Image[7];
+        [SerializeField] private Button _musicVolumeDownButton;
+        [SerializeField] private Button _musicVolumeUpButton;
+        [SerializeField] private Image[] _musicVolumeIndicators = new Image[7];
 
         [Header("Sensitivity Controls")]
-        [SerializeField] private Button sensitivityDownButton;
-        [SerializeField] private Button sensitivityUpButton;
-        [SerializeField] private Image[] sensitivityIndicators = new Image[7];
+        [SerializeField] private Button _sensitivityDownButton;
+        [SerializeField] private Button _sensitivityUpButton;
+        [SerializeField] private Image[] _sensitivityIndicators = new Image[7];
 
         [Header("Volume Indicator Colors")]
-        [SerializeField] private Color activeVolumeColor = Color.white;
-        [SerializeField] private Color inactiveVolumeColor = Color.gray;
+        [SerializeField] private Color _activeVolumeColor = Color.white;
+        private readonly Color _inactiveVolumeColor = Color.gray;
 
         [Header("Other Options")]
-        [SerializeField] private Button resetDefaultsButton;
+        [SerializeField] private Button _resetDefaultsButton;
 
-        private int masterVolumeLevel = 5;
-        private int sfxVolumeLevel = 5;
-        private int musicVolumeLevel = 5;
-        private int sensitivityLevel = 5;
+        private int _masterVolumeLevel = 5;
+        private int _sfxVolumeLevel = 5;
+        private int _musicVolumeLevel = 5;
+        private int _sensitivityLevel = 5;
+        
+        [SerializeField] private AudioClip _buttonClick;
 
         public override void EnterState(MenuManager menuManager)
         {
             base.EnterState(menuManager);
-            _menuManager = menuManager;
+            
             SetupControls();
             LoadSettings();
         }
@@ -60,62 +63,62 @@ namespace RAIL_SHOOTER.MENU
         private void SetupControls()
         {
             // Master Volume Controls
-            if (masterVolumeDownButton != null)
+            if (_masterVolumeDownButton != null)
             {
-                masterVolumeDownButton.onClick.RemoveAllListeners();
-                masterVolumeDownButton.onClick.AddListener(() => AdjustVolume(VolumeType.Master, -1));
+                _masterVolumeDownButton.onClick.RemoveAllListeners();
+                _masterVolumeDownButton.onClick.AddListener(() => AdjustVolume(VolumeType.Master, -1));
             }
 
-            if (masterVolumeUpButton != null)
+            if (_masterVolumeUpButton != null)
             {
-                masterVolumeUpButton.onClick.RemoveAllListeners();
-                masterVolumeUpButton.onClick.AddListener(() => AdjustVolume(VolumeType.Master, 1));
+                _masterVolumeUpButton.onClick.RemoveAllListeners();
+                _masterVolumeUpButton.onClick.AddListener(() => AdjustVolume(VolumeType.Master, 1));
             }
 
             // SFX Volume Controls
-            if (sfxVolumeDownButton != null)
+            if (_sfxVolumeDownButton != null)
             {
-                sfxVolumeDownButton.onClick.RemoveAllListeners();
-                sfxVolumeDownButton.onClick.AddListener(() => AdjustVolume(VolumeType.SFX, -1));
+                _sfxVolumeDownButton.onClick.RemoveAllListeners();
+                _sfxVolumeDownButton.onClick.AddListener(() => AdjustVolume(VolumeType.SFX, -1));
             }
 
-            if (sfxVolumeUpButton != null)
+            if (_sfxVolumeUpButton != null)
             {
-                sfxVolumeUpButton.onClick.RemoveAllListeners();
-                sfxVolumeUpButton.onClick.AddListener(() => AdjustVolume(VolumeType.SFX, 1));
+                _sfxVolumeUpButton.onClick.RemoveAllListeners();
+                _sfxVolumeUpButton.onClick.AddListener(() => AdjustVolume(VolumeType.SFX, 1));
             }
 
             // Music Volume Controls
-            if (musicVolumeDownButton != null)
+            if (_musicVolumeDownButton != null)
             {
-                musicVolumeDownButton.onClick.RemoveAllListeners();
-                musicVolumeDownButton.onClick.AddListener(() => AdjustVolume(VolumeType.Music, -1));
+                _musicVolumeDownButton.onClick.RemoveAllListeners();
+                _musicVolumeDownButton.onClick.AddListener(() => AdjustVolume(VolumeType.Music, -1));
             }
 
-            if (musicVolumeUpButton != null)
+            if (_musicVolumeUpButton != null)
             {
-                musicVolumeUpButton.onClick.RemoveAllListeners();
-                musicVolumeUpButton.onClick.AddListener(() => AdjustVolume(VolumeType.Music, 1));
+                _musicVolumeUpButton.onClick.RemoveAllListeners();
+                _musicVolumeUpButton.onClick.AddListener(() => AdjustVolume(VolumeType.Music, 1));
             }
 
             // Sensitivity Controls
-            if (sensitivityDownButton != null)
+            if (_sensitivityDownButton != null)
             {
-                sensitivityDownButton.onClick.RemoveAllListeners();
-                sensitivityDownButton.onClick.AddListener(() => AdjustSensitivity(-1));
+                _sensitivityDownButton.onClick.RemoveAllListeners();
+                _sensitivityDownButton.onClick.AddListener(() => AdjustSensitivity(-1));
             }
 
-            if (sensitivityUpButton != null)
+            if (_sensitivityUpButton != null)
             {
-                sensitivityUpButton.onClick.RemoveAllListeners();
-                sensitivityUpButton.onClick.AddListener(() => AdjustSensitivity(1));
+                _sensitivityUpButton.onClick.RemoveAllListeners();
+                _sensitivityUpButton.onClick.AddListener(() => AdjustSensitivity(1));
             }
 
             // Reset button
-            if (resetDefaultsButton != null)
+            if (_resetDefaultsButton != null)
             {
-                resetDefaultsButton.onClick.RemoveAllListeners();
-                resetDefaultsButton.onClick.AddListener(ResetToDefaults);
+                _resetDefaultsButton.onClick.RemoveAllListeners();
+                _resetDefaultsButton.onClick.AddListener(ResetToDefaults);
             }
         }
 
@@ -124,22 +127,24 @@ namespace RAIL_SHOOTER.MENU
             switch (volumeType)
             {
                 case VolumeType.Master:
-                    masterVolumeLevel = Mathf.Clamp(masterVolumeLevel + adjustment, 0, 7);
-                    if (RAIL_SHOOTER.AUDIO.AudioSettings.Instance != null)
-                        RAIL_SHOOTER.AUDIO.AudioSettings.Instance.SetMasterVolume(masterVolumeLevel);
+                    _masterVolumeLevel = Mathf.Clamp(_masterVolumeLevel + adjustment, 0, 7);
+                    if (RAIL_SHOOTER.AUDIO.AudioSettings.Instance)
+                        RAIL_SHOOTER.AUDIO.AudioSettings.Instance.SetMasterVolume(_masterVolumeLevel);
                     break;
 
                 case VolumeType.SFX:
-                    sfxVolumeLevel = Mathf.Clamp(sfxVolumeLevel + adjustment, 0, 7);
-                    if (RAIL_SHOOTER.AUDIO.AudioSettings.Instance != null)
-                        RAIL_SHOOTER.AUDIO.AudioSettings.Instance.SetSFXVolume(sfxVolumeLevel);
+                    _sfxVolumeLevel = Mathf.Clamp(_sfxVolumeLevel + adjustment, 0, 7);
+                    if (RAIL_SHOOTER.AUDIO.AudioSettings.Instance)
+                        RAIL_SHOOTER.AUDIO.AudioSettings.Instance.SetSFXVolume(_sfxVolumeLevel);
                     break;
 
                 case VolumeType.Music:
-                    musicVolumeLevel = Mathf.Clamp(musicVolumeLevel + adjustment, 0, 7);
-                    if (RAIL_SHOOTER.AUDIO.AudioSettings.Instance != null)
-                        RAIL_SHOOTER.AUDIO.AudioSettings.Instance.SetMusicVolume(musicVolumeLevel);
+                    _musicVolumeLevel = Mathf.Clamp(_musicVolumeLevel + adjustment, 0, 7);
+                    if (RAIL_SHOOTER.AUDIO.AudioSettings.Instance)
+                        RAIL_SHOOTER.AUDIO.AudioSettings.Instance.SetMusicVolume(_musicVolumeLevel);
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(volumeType), volumeType, null);
             }
 
             UpdateVolumeDisplay();
@@ -149,16 +154,16 @@ namespace RAIL_SHOOTER.MENU
         private void UpdateVolumeDisplay()
         {
             // Update Master Volume indicators
-            UpdateVolumeIndicators(masterVolumeIndicators, masterVolumeLevel);
-            UpdateVolumeButtonStates(masterVolumeDownButton, masterVolumeUpButton, masterVolumeLevel);
+            UpdateVolumeIndicators(_masterVolumeIndicators, _masterVolumeLevel);
+            UpdateVolumeButtonStates(_masterVolumeDownButton, _masterVolumeUpButton, _masterVolumeLevel);
 
             // Update SFX Volume indicators
-            UpdateVolumeIndicators(sfxVolumeIndicators, sfxVolumeLevel);
-            UpdateVolumeButtonStates(sfxVolumeDownButton, sfxVolumeUpButton, sfxVolumeLevel);
+            UpdateVolumeIndicators(_sfxVolumeIndicators, _sfxVolumeLevel);
+            UpdateVolumeButtonStates(_sfxVolumeDownButton, _sfxVolumeUpButton, _sfxVolumeLevel);
 
             // Update Music Volume indicators
-            UpdateVolumeIndicators(musicVolumeIndicators, musicVolumeLevel);
-            UpdateVolumeButtonStates(musicVolumeDownButton, musicVolumeUpButton, musicVolumeLevel);
+            UpdateVolumeIndicators(_musicVolumeIndicators, _musicVolumeLevel);
+            UpdateVolumeButtonStates(_musicVolumeDownButton, _musicVolumeUpButton, _musicVolumeLevel);
 
             // Update Sensitivity indicators
             UpdateSensitivityIndicators();
@@ -167,37 +172,37 @@ namespace RAIL_SHOOTER.MENU
 
         private void UpdateVolumeIndicators(Image[] indicators, int volumeLevel)
         {
-            for (int i = 0; i < indicators.Length; i++)
+            for (var i = 0; i < indicators.Length; i++)
             {
-                if (indicators[i] != null)
+                if (indicators[i])
                 {
-                    indicators[i].color = i < volumeLevel ? activeVolumeColor : inactiveVolumeColor;
+                    indicators[i].color = i < volumeLevel ? _activeVolumeColor : _inactiveVolumeColor;
                 }
             }
         }
 
         private void UpdateVolumeButtonStates(Button downButton, Button upButton, int volumeLevel)
         {
-            if (downButton != null)
-                downButton.interactable = volumeLevel > 0;
+            if (!downButton) return;
+            downButton.interactable = volumeLevel > 0;
 
-            if (upButton != null)
-                upButton.interactable = volumeLevel < 7;
+            if (!upButton) return;
+            upButton.interactable = volumeLevel < 7;
         }
 
         private void LoadVolumeSettings()
         {
             if (RAIL_SHOOTER.AUDIO.AudioSettings.Instance != null)
             {
-                masterVolumeLevel = RAIL_SHOOTER.AUDIO.AudioSettings.Instance.GetMasterVolume();
-                sfxVolumeLevel = RAIL_SHOOTER.AUDIO.AudioSettings.Instance.GetSFXVolume();
-                musicVolumeLevel = RAIL_SHOOTER.AUDIO.AudioSettings.Instance.GetMusicVolume();
+                _masterVolumeLevel = RAIL_SHOOTER.AUDIO.AudioSettings.Instance.GetMasterVolume();
+                _sfxVolumeLevel = RAIL_SHOOTER.AUDIO.AudioSettings.Instance.GetSFXVolume();
+                _musicVolumeLevel = RAIL_SHOOTER.AUDIO.AudioSettings.Instance.GetMusicVolume();
             }
             else
             {
-                masterVolumeLevel = PlayerPrefs.GetInt("MasterVolume", 5);
-                sfxVolumeLevel = PlayerPrefs.GetInt("SFXVolume", 5);
-                musicVolumeLevel = PlayerPrefs.GetInt("MusicVolume", 5);
+                _masterVolumeLevel = PlayerPrefs.GetInt("MasterVolume", 5);
+                _sfxVolumeLevel = PlayerPrefs.GetInt("SFXVolume", 5);
+                _musicVolumeLevel = PlayerPrefs.GetInt("MusicVolume", 5);
             }
 
             UpdateVolumeDisplay();
@@ -211,7 +216,7 @@ namespace RAIL_SHOOTER.MENU
 
         private void LoadSensitivitySettings()
         {
-            sensitivityLevel = PlayerPrefs.GetInt("MouseSensitivity", 5);
+            _sensitivityLevel = PlayerPrefs.GetInt("MouseSensitivity", 5);
             UpdateVolumeDisplay(); // This will update sensitivity too
         }
 
@@ -227,39 +232,39 @@ namespace RAIL_SHOOTER.MENU
 
         private void SaveSensitivitySettings()
         {
-            PlayerPrefs.SetInt("MouseSensitivity", sensitivityLevel);
+            PlayerPrefs.SetInt("MouseSensitivity", _sensitivityLevel);
             PlayerPrefs.Save();
-            Debug.Log($"[Options] Sensitivity saved: {sensitivityLevel}");
+            Debug.Log($"[Options] Sensitivity saved: {_sensitivityLevel}");
         }
 
         private void AdjustSensitivity(int adjustment)
         {
-            sensitivityLevel = Mathf.Clamp(sensitivityLevel + adjustment, 1, 7);
+            _sensitivityLevel = Mathf.Clamp(_sensitivityLevel + adjustment, 1, 7);
             SaveSensitivitySettings();
             UpdateVolumeDisplay(); // This will update sensitivity indicators too
             PlayButtonClickSFX();
             
-            Debug.Log($"[Options] Sensitivity adjusted to: {sensitivityLevel}");
+            Debug.Log($"[Options] Sensitivity adjusted to: {_sensitivityLevel}");
         }
 
         private void UpdateSensitivityIndicators()
         {
-            for (int i = 0; i < sensitivityIndicators.Length; i++)
+            for (int i = 0; i < _sensitivityIndicators.Length; i++)
             {
-                if (sensitivityIndicators[i] != null)
+                if (_sensitivityIndicators[i] != null)
                 {
-                    sensitivityIndicators[i].color = i < sensitivityLevel ? activeVolumeColor : inactiveVolumeColor;
+                    _sensitivityIndicators[i].color = i < _sensitivityLevel ? _activeVolumeColor : _inactiveVolumeColor;
                 }
             }
         }
 
         private void UpdateSensitivityButtonStates()
         {
-            if (sensitivityDownButton != null)
-                sensitivityDownButton.interactable = sensitivityLevel > 1;
+            if (_sensitivityDownButton != null)
+                _sensitivityDownButton.interactable = _sensitivityLevel > 1;
 
-            if (sensitivityUpButton != null)
-                sensitivityUpButton.interactable = sensitivityLevel < 7;
+            if (_sensitivityUpButton != null)
+                _sensitivityUpButton.interactable = _sensitivityLevel < 7;
         }
 
         private void ResetToDefaults()
@@ -271,7 +276,7 @@ namespace RAIL_SHOOTER.MENU
             }
             
             // Reset sensitivity to default
-            sensitivityLevel = 5;
+            _sensitivityLevel = 5;
             SaveSensitivitySettings();
             UpdateVolumeDisplay();
             PlayButtonClickSFX();
@@ -279,22 +284,22 @@ namespace RAIL_SHOOTER.MENU
 
         private void PlayButtonClickSFX()
         {
-            AudioManager.Instance.PlaySFX("button_click", 0.5f);
+            AudioManager.Instance.PlaySFX(_buttonClick, 0.5f);
         }
 
         private void OnValidate()
         {
-            if (masterVolumeIndicators == null || masterVolumeIndicators.Length != 7)
-                masterVolumeIndicators = new Image[7];
+            if (_masterVolumeIndicators == null || _masterVolumeIndicators.Length != 7)
+                _masterVolumeIndicators = new Image[7];
 
-            if (sfxVolumeIndicators == null || sfxVolumeIndicators.Length != 7)
-                sfxVolumeIndicators = new Image[7];
+            if (_sfxVolumeIndicators == null || _sfxVolumeIndicators.Length != 7)
+                _sfxVolumeIndicators = new Image[7];
 
-            if (musicVolumeIndicators == null || musicVolumeIndicators.Length != 7)
-                musicVolumeIndicators = new Image[7];
+            if (_musicVolumeIndicators == null || _musicVolumeIndicators.Length != 7)
+                _musicVolumeIndicators = new Image[7];
 
-            if (sensitivityIndicators == null || sensitivityIndicators.Length != 7)
-                sensitivityIndicators = new Image[7];
+            if (_sensitivityIndicators == null || _sensitivityIndicators.Length != 7)
+                _sensitivityIndicators = new Image[7];
         }
         public static float GetMouseSensitivity()
         {

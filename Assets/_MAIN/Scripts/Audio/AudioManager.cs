@@ -1,3 +1,4 @@
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -10,18 +11,17 @@ namespace RAIL_SHOOTER.AUDIO
 
         [SerializeField] private AudioMixer _audioMixer;
 
-        [Header("Audio Mixer Groups")]
-        [SerializeField] private AudioMixerGroup _masterMixerGroup;
+        [Header("Audio Mixer Groups")] [SerializeField]
+        private AudioMixerGroup _masterMixerGroup;
+
         [SerializeField] private AudioMixerGroup _sfxMixerGroup;
         [SerializeField] private AudioMixerGroup _musicMixerGroup;
 
-        [Header("Audio Mixer Parameters")]
-        private const string MIXER_PARAM_MASTER_VOLUME = "MasterVolume";
+        [Header("Audio Mixer Parameters")] private const string MIXER_PARAM_MASTER_VOLUME = "MasterVolume";
         private const string MIXER_PARAM_SFX_VOLUME = "SFXVolume";
         private const string MIXER_PARAM_MUSIC_VOLUME = "MusicVolume";
 
-        [Header("Audio Folder Paths")]
-        private const string SFX_FOLDER_PATH = "Resources/Audio/SFX/";
+        [Header("Audio Folder Paths")] private const string SFX_FOLDER_PATH = "Resources/Audio/SFX/";
         private const string MUSIC_FOLDER_PATH = "Resources/Audio/Music/";
 
         private GameObject _sfxAudioObject;
@@ -34,6 +34,7 @@ namespace RAIL_SHOOTER.AUDIO
                 Destroy(gameObject);
                 return;
             }
+
             Instance = this;
 
             transform.SetParent(null);
@@ -45,10 +46,14 @@ namespace RAIL_SHOOTER.AUDIO
             _musicAudioObject = new GameObject("Music");
             _musicAudioObject.transform.parent = transform;
         }
+
         public void PlaySFX(AudioClip clip, float volume = 1f, float pitch = 1f, float blend = 0f)
         {
-            GameObject audioObject = CreateAudioObject($"SFX - {clip.name}", _sfxAudioObject.transform);
-            AudioSource audioSource = audioObject.GetComponent<AudioSource>();
+            var audioObject = CreateAudioObject(
+                out var audioSource,
+                $"Music - {clip.name}",
+                _sfxAudioObject.transform
+            );
 
             audioSource.clip = clip;
             audioSource.pitch = pitch;
@@ -60,33 +65,15 @@ namespace RAIL_SHOOTER.AUDIO
             Destroy(audioObject, clip.length);
         }
 
-        public void PlaySFX(string sfxName, float volume = 1f)
-        {
-            string sfxPath = SFX_FOLDER_PATH + sfxName;
-            AudioClip clip = Resources.Load<AudioClip>(sfxPath);
-
-            if (clip == null)
-            {
-                Debug.LogWarning($"AudioClip não encontrado: {sfxPath}");
-                return;
-            }
-
-            GameObject audioObject = CreateAudioObject($"SFX - {clip.name}", _sfxAudioObject.transform);
-            AudioSource audioSource = audioObject.GetComponent<AudioSource>();
-
-            audioSource.clip = clip;
-            audioSource.volume = volume;
-            audioSource.spatialBlend = 0f;
-            audioSource.outputAudioMixerGroup = _sfxMixerGroup;
-            audioSource.Play();
-
-            Destroy(audioObject, clip.length);
-        }
         public void PlayEnvironmentSFX(AudioClip clip, Vector3 position, float volume = 1f, bool loop = true)
         {
-            GameObject audioObject = CreateAudioObject($"SFX - {clip.name}");
+            var audioObject = CreateAudioObject(
+                out var audioSource,
+                $"Music - {clip.name}",
+                _musicAudioObject.transform
+            );
+
             audioObject.transform.position = position;
-            AudioSource audioSource = audioObject.GetComponent<AudioSource>();
 
             audioSource.clip = clip;
             audioSource.loop = loop;
@@ -97,16 +84,20 @@ namespace RAIL_SHOOTER.AUDIO
             audioSource.outputAudioMixerGroup = _sfxMixerGroup;
             audioSource.Play();
 
-            if (!loop)
-                Destroy(audioObject, clip.length);
+            if (loop) return;
+
+            Destroy(audioObject, clip.length);
         }
 
         public void PlayMusic(AudioClip clip, float volume = 1f, bool loop = true)
         {
             StopAllMusic();
 
-            GameObject audioObject = CreateAudioObject($"Music - {clip.name}", _musicAudioObject.transform);
-            AudioSource audioSource = audioObject.GetComponent<AudioSource>();
+            var audioObject = CreateAudioObject(
+                out var audioSource,
+                $"Music - {clip.name}",
+                _musicAudioObject.transform
+            );
 
             audioSource.clip = clip;
             audioSource.volume = volume;
@@ -114,35 +105,15 @@ namespace RAIL_SHOOTER.AUDIO
             audioSource.outputAudioMixerGroup = _musicMixerGroup;
             audioSource.Play();
         }
-        public void PlayMusic(string songName, float volume = 1f, bool loop = true)
-        {
-            string songPath = MUSIC_FOLDER_PATH + songName;
-            AudioClip clip = Resources.Load<AudioClip>(songPath);
 
-            if (clip == null)
-            {
-                Debug.LogWarning($"AudioClip de música não encontrado: {songPath}");
-                return;
-            }
-
-            StopAllMusic();
-
-            GameObject audioObject = CreateAudioObject($"Music - {clip.name}", _musicAudioObject.transform);
-            AudioSource audioSource = audioObject.GetComponent<AudioSource>();
-
-            audioSource.clip = clip;
-            audioSource.volume = volume;
-            audioSource.loop = loop;
-            audioSource.outputAudioMixerGroup = _musicMixerGroup;
-            audioSource.Play();
-        }
         public void StopMusic(string songName) => StopAudio(songName, _musicAudioObject);
         public void StopSFX(string sfxName) => StopAudio(sfxName, _sfxAudioObject);
+        public void StopEnvironmentSFX(string sfxName) => StopAudio(sfxName, _sfxAudioObject);
 
         public void StopAllMusic()
         {
-            AudioSource[] audioSources = _musicAudioObject.GetComponentsInChildren<AudioSource>();
-            foreach (AudioSource source in audioSources)
+            var audioSources = _musicAudioObject.GetComponentsInChildren<AudioSource>();
+            foreach (var source in audioSources)
             {
                 if (source.isPlaying)
                 {
@@ -153,8 +124,8 @@ namespace RAIL_SHOOTER.AUDIO
 
         public void StopAllSFX()
         {
-            AudioSource[] audioSources = _sfxAudioObject.GetComponentsInChildren<AudioSource>();
-            foreach (AudioSource source in audioSources)
+            var audioSources = _sfxAudioObject.GetComponentsInChildren<AudioSource>();
+            foreach (var source in audioSources)
             {
                 if (source.isPlaying)
                 {
@@ -165,35 +136,31 @@ namespace RAIL_SHOOTER.AUDIO
 
         public bool IsMusicPlaying()
         {
-            AudioSource[] audioSources = _musicAudioObject.GetComponentsInChildren<AudioSource>();
-            foreach (AudioSource source in audioSources)
-            {
-                if (source.isPlaying)
-                    return true;
-            }
-            return false;
+            var audioSources = _musicAudioObject.GetComponentsInChildren<AudioSource>();
+            return audioSources.Any(source => source.isPlaying);
         }
 
         public AudioMixer GetAudioMixer() => _audioMixer;
+
         private void StopAudio(string audioName, GameObject parentObject)
         {
-            AudioSource[] audioSources = parentObject.GetComponentsInChildren<AudioSource>();
-            foreach (AudioSource source in audioSources)
+            var audioSources = parentObject.GetComponentsInChildren<AudioSource>();
+            foreach (var source in audioSources)
             {
-                if (source.clip.name == audioName)
-                {
-                    Destroy(source.gameObject);
-                    break;
-                }
+                if (source.clip.name != audioName) continue;
+
+                Destroy(source.gameObject);
+                break;
             }
         }
-        private GameObject CreateAudioObject(string name, Transform parent = null)
-        {
-            GameObject gameObject = new GameObject(name);
-            gameObject.transform.parent = parent;
-            gameObject.AddComponent<AudioSource>();
 
-            return gameObject;
+        private static GameObject CreateAudioObject(out AudioSource audioSource, string name, Transform parent = null)
+        {
+            var audioObject = new GameObject(name);
+            audioObject.transform.parent = parent;
+
+            audioSource = audioObject.AddComponent<AudioSource>();
+            return audioObject;
         }
     }
 }
