@@ -7,14 +7,12 @@ namespace RAIL_SHOOTER.PLAYER
 {
     public class PlayerController : MonoBehaviour
     {
-        [Header("Components")]
-        private PlayerComponent[] _playerComponents;
+        [Header("Components")] private PlayerComponent[] _playerComponents;
         [SerializeField] private PlayerAim _playerAim;
         [SerializeField] private PlayerMovement _playerMovement;
-        [SerializeField] private PlayerShoot _playerShoot;
+        [SerializeField] private PlayerGun _playerGun;
         [SerializeField] private PlayerAnimator _playerAnimator;
         [SerializeField] private PlayerAudio _playerAudio;
-        
 
         private InputReader _inputReader;
 
@@ -25,26 +23,26 @@ namespace RAIL_SHOOTER.PLAYER
         public event Action OnPlayerAimReleased;
         public event Action OnPlayerReloadPressed;
 
-        [Header("Player States")]
-        [SerializeField] private float _shootCooldown = 0.5f;
-        private float _lastShootTime;
-        private bool _isReloading;
-        private bool _isFiring;
-        private bool _isAiming;
+        [Header("Player States")] [SerializeField]
+        private float _shootCooldown = 0.5f;
+
+        [SerializeField] private bool _isReloading;
 
         public bool IsReloading => _isReloading;
-        public bool IsFiring => _isFiring;
-        public bool IsAiming => _isAiming;
-        public bool CanShoot => Time.time >= _lastShootTime + _shootCooldown;
-        public bool CanPerformAction => !_isReloading && !_isFiring;
+        private bool IsFiring { get; set; }
+        public bool IsAiming { get; private set; }
+
+        public bool CanShoot => Time.time >= LastShootTime + _shootCooldown;
+        private bool CanPerformAction => !_isReloading && !IsFiring;
         public bool CanFire => CanPerformAction && CanShoot;
 
-        public float LastShootTime { get => _lastShootTime; set => _lastShootTime = value; }
+        public float LastShootTime { get; set; }
         public float ShootCooldown => _shootCooldown;
 
         [SerializeField] private AudioClip _environmentSound;
 
         #region Unity Cycle Methods
+
         private void Awake()
         {
             _inputReader = new InputReader();
@@ -52,7 +50,7 @@ namespace RAIL_SHOOTER.PLAYER
             {
                 _playerAim,
                 _playerMovement,
-                _playerShoot,
+                _playerGun,
                 _playerAudio,
                 _playerAnimator
             };
@@ -68,28 +66,31 @@ namespace RAIL_SHOOTER.PLAYER
 
         private void OnEnable()
         {
+            _inputReader = new InputReader();
             _inputReader.OnEnable();
 
-            InputReader.OnLookInput += HandleLookInput;
-            InputReader.OnFirePressed += HandleFirePressed;
-            InputReader.OnFireReleased += HandleFireReleased;
-            InputReader.OnAimPressed += HandleAimPressed;
-            InputReader.OnAimReleased += HandleAimReleased;
-            InputReader.OnReloadPressed += HandleReloadPressed;
+            _inputReader.OnLookInput += HandleLookInput;
+            _inputReader.OnFirePressed += HandleFirePressed;
+            _inputReader.OnFireReleased += HandleFireReleased;
+            _inputReader.OnAimPressed += HandleAimPressed;
+            _inputReader.OnAimReleased += HandleAimReleased;
+            _inputReader.OnReloadPressed += HandleReloadPressed;
 
             ForEachComponent(component => component?.OnEnable());
         }
 
         private void OnDisable()
         {
+            if (_inputReader == null) return;
+            
             _inputReader.OnDisable();
 
-            InputReader.OnLookInput -= HandleLookInput;
-            InputReader.OnFirePressed -= HandleFirePressed;
-            InputReader.OnFireReleased -= HandleFireReleased;
-            InputReader.OnAimPressed -= HandleAimPressed;
-            InputReader.OnAimReleased -= HandleAimReleased;
-            InputReader.OnReloadPressed -= HandleReloadPressed;
+            _inputReader.OnLookInput -= HandleLookInput;
+            _inputReader.OnFirePressed -= HandleFirePressed;
+            _inputReader.OnFireReleased -= HandleFireReleased;
+            _inputReader.OnAimPressed -= HandleAimPressed;
+            _inputReader.OnAimReleased -= HandleAimReleased;
+            _inputReader.OnReloadPressed -= HandleReloadPressed;
 
             ForEachComponent(component => component?.OnDisable());
         }
@@ -111,11 +112,12 @@ namespace RAIL_SHOOTER.PLAYER
 
         private void ForEachComponent(Action<PlayerComponent> componentAction)
         {
-            for (int i = 0; i < _playerComponents.Length; i++)
+            foreach (var component in _playerComponents)
             {
-                componentAction(_playerComponents[i]);
+                componentAction(component);
             }
         }
+
         #endregion
 
         #region Input Handlers
@@ -151,15 +153,16 @@ namespace RAIL_SHOOTER.PLAYER
         }
 
         public void SetReloading(bool value) => _isReloading = value;
-        public void SetFiring(bool value) => _isFiring = value;
-        public void SetAiming(bool value) => _isAiming = value;
+        public void SetFiring(bool value) => IsFiring = value;
+        public void SetAiming(bool value) => IsAiming = value;
 
         #endregion
 
         #region Player Components Getters
+
         public PlayerAim PlayerAim => _playerAim;
         public PlayerMovement PlayerMovement => _playerMovement;
-        public PlayerShoot PlayerShoot => _playerShoot;
+        public PlayerGun PlayerGun => _playerGun;
         public PlayerAnimator PlayerAnimator => _playerAnimator;
         public PlayerAudio PlayerAudio => _playerAudio;
 

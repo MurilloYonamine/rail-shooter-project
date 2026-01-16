@@ -12,15 +12,12 @@ namespace RAIL_SHOOTER.PLAYER.INPUT
         private readonly InputAction _aim;
         private readonly InputAction _reload;
 
-        public static Action<Vector2> OnLookInput;
-
-        public static Action OnAimPressed;
-        public static Action OnAimReleased;
-
-        public static Action OnFirePressed;
-        public static Action OnFireReleased;
-
-        public static Action OnReloadPressed;
+        public event Action<Vector2> OnLookInput;
+        public event Action OnAimPressed;
+        public event Action OnAimReleased;
+        public event Action OnFirePressed;
+        public event Action OnFireReleased;
+        public event Action OnReloadPressed;
 
         public InputReader()
         {
@@ -68,7 +65,7 @@ namespace RAIL_SHOOTER.PLAYER.INPUT
         }
         private void HandleLookInput(InputAction.CallbackContext context)
         {
-            Vector2 lookInput = _look.ReadValue<Vector2>();
+            var lookInput = _look.ReadValue<Vector2>();
             OnLookInput?.Invoke(lookInput);
         }
         private void HandleAttackInput(InputAction.CallbackContext context)
@@ -82,6 +79,7 @@ namespace RAIL_SHOOTER.PLAYER.INPUT
                 OnFireReleased?.Invoke();
             }
         }
+
         private void HandleAimInput(InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -93,6 +91,7 @@ namespace RAIL_SHOOTER.PLAYER.INPUT
                 OnAimReleased?.Invoke();
             }
         }
+
         private void HandleReloadInput(InputAction.CallbackContext context)
         {
             if (context.performed)
