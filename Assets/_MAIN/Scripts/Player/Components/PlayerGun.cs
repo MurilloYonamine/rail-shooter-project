@@ -35,7 +35,8 @@ namespace RAIL_SHOOTER.PLAYER
         public event Action OnShootSuccessful;
         public event Action OnShootFailed;
 
-        [Header("Accuracy")] [SerializeField] private float _hipFireSpread = 5f;
+        [Header("Accuracy")] 
+        [SerializeField] private float _hipFireSpread = 5f;
         [SerializeField] private float _aimSpread = 1f;
 
         public override void OnStart()
@@ -49,7 +50,6 @@ namespace RAIL_SHOOTER.PLAYER
             _player.OnPlayerFirePressed += OnFirePressed;
             _player.OnPlayerFireReleased += OnFireReleased;
             _player.OnPlayerReloadPressed += OnReloadPressed;
-            _player.OnPlayerReloadPressed += OnReloadFinished;
         }
 
         public override void OnDisable()
@@ -57,7 +57,6 @@ namespace RAIL_SHOOTER.PLAYER
             _player.OnPlayerFirePressed -= OnFirePressed;
             _player.OnPlayerFireReleased -= OnFireReleased;
             _player.OnPlayerReloadPressed -= OnReloadPressed;
-            _player.OnPlayerReloadPressed -= OnReloadFinished;
         }
 
         private void OnFirePressed()
@@ -86,11 +85,13 @@ namespace RAIL_SHOOTER.PLAYER
                 StartReload();
             }
         }
+
         #region Shooting Logic
+
         private void Shoot()
         {
-            if (!TryGetAimPoint(out Vector3 aimPoint)) return;
-            
+            TryGetAimPoint(out Vector3 aimPoint);
+
             Vector3 shootDirection = GetShootDirection(aimPoint);
 
             float spreadAngle = _player.IsAiming ? _aimSpread : _hipFireSpread;
@@ -110,13 +111,10 @@ namespace RAIL_SHOOTER.PLAYER
 
             CurrentAmmo--;
             OnAmmoChanged?.Invoke();
-            
-            Debug.Log($"Shot fired! Remaining Ammo: {CurrentAmmo}");
 
             if (CurrentAmmo <= 0)
             {
-                Debug.Log("Out of ammo! Starting reload...");
-                StartReload();
+                RequestReload();
             }
         }
 
@@ -149,26 +147,51 @@ namespace RAIL_SHOOTER.PLAYER
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
+
         #endregion
-        
+
         #region Reloading Logic
+        private void RequestReload()
+        {
+            if (IsReloading) return;
+            _player.StartCoroutine(ReloadNextFrame());
+        }
+        private IEnumerator ReloadNextFrame()
+        {
+            yield return null;
+            StartReload();
+        }
         private void StartReload()
         {
             if (IsReloading) return;
             
             IsReloading = true;
             _player.SetReloading(true);
+            
             OnReloadStarted?.Invoke();
+
+            _player.StartCoroutine(ReloadCoroutine());
         }
+
+        private IEnumerator ReloadCoroutine()
+        {
+            yield return new WaitForSeconds(_reloadTime);
+            FinishReload();
+        }
+
         private void FinishReload()
         {
             CurrentAmmo = _maxAmmo;
+            
             IsReloading = false;
-            _player.SetReloading(false);
+            _player.SetReloading(IsReloading);
+            
             OnReloadFinished?.Invoke();
             OnAmmoChanged?.Invoke();
         }
+
         #endregion
+
         private Vector3 ApplySpread(Vector3 direction, float spreadAngle)
         {
             float spreadRad = spreadAngle * Mathf.Deg2Rad;

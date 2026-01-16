@@ -184,7 +184,7 @@ namespace RAIL_SHOOTER.PLAYER
         
         public bool TryGetAimPoint(out Vector3 aimPoint, float maxDistance)
         {
-            Camera cam = Camera.main;
+            var cam = Camera.main;
 
             Vector2 mouseScreenPos = Input.mousePosition;
 

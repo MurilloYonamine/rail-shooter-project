@@ -67,22 +67,14 @@ namespace RAIL_SHOOTER.PLAYER
 
         private void PlayFireAnimation()
         {
-            _player.SetFiring(true);
-
             _armAnimator?.SetTrigger(ANIMATOR_PARAM_FIRE);
             _gunAnimator?.SetTrigger(ANIMATOR_PARAM_FIRE);
-
-            _player.SetFiring(false);
         }
 
         private void PlayReloadAnimation()
         {
-            _player.SetReloading(true);
-
             _armAnimator?.SetTrigger(ANIMATOR_PARAM_RELOAD);
             _gunAnimator?.SetTrigger(ANIMATOR_PARAM_RELOAD);
-
-            _player.SetReloading(false);
         }
         public void SetWalking(bool isWalking, float speed)
         {

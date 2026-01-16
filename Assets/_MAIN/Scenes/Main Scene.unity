@@ -1056,6 +1056,11 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!4 &155570978 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1094697332951929699, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+  m_PrefabInstance: {fileID: 681257755}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &192120487
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4830,35 +4835,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5221505432053728414, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.0025
+      value: -0.05
       objectReference: {fileID: 0}
     - target: {fileID: 5221505432053728414, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.0015
+      value: -0.05
       objectReference: {fileID: 0}
     - target: {fileID: 5221505432053728414, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.0012
+      value: -0.03
       objectReference: {fileID: 0}
     - target: {fileID: 5221505432053728414, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99882543
+      value: -0.46390373
       objectReference: {fileID: 0}
     - target: {fileID: 5221505432053728414, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.043609675
+      value: 0.5336603
       objectReference: {fileID: 0}
     - target: {fileID: 5221505432053728414, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0009211057
+      value: 0.5336603
       objectReference: {fileID: 0}
     - target: {fileID: 5221505432053728414, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.02109678
+      value: 0.46390373
+      objectReference: {fileID: 0}
+    - target: {fileID: 5221505432053728414, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -98
       objectReference: {fileID: 0}
     - target: {fileID: 5221505432053728414, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -2.42
+      value: 270
       objectReference: {fileID: 0}
     - target: {fileID: 5231510497805415797, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
       propertyPath: m_Layer
@@ -5057,9 +5066,17 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerGun._shootPoint
+      value: 
+      objectReference: {fileID: 155570978}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
       propertyPath: _playerAim._crosshairImage
       value: 
       objectReference: {fileID: 1485536646}
+    - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
+      propertyPath: _playerMovement._moveSpeed
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6988748918970899907, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
       propertyPath: _playerMovement._railTrack
       value: 
@@ -5465,10 +5482,10 @@ PrefabInstance:
       addedObject: {fileID: 876928000}
     - targetCorrespondingSourceObject: {fileID: 7126513149828507295, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 876928001}
+      addedObject: {fileID: 876928002}
     - targetCorrespondingSourceObject: {fileID: 7126513149828507295, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 876928002}
+      addedObject: {fileID: 876928001}
   m_SourcePrefab: {fileID: 100100000, guid: fbd58472f3b8cd0499f737e8ddef6d38, type: 3}
 --- !u!1001 &701978780
 PrefabInstance:
@@ -10720,8 +10737,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbebbf6de1d23ec47933800894152cd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _positionOffset: {x: 0, y: 0, z: 0}
-  _rotationOffset: {x: 0, y: -80, z: 0}
+  _positionOffset: {x: 0.2, y: 0, z: -0.2}
+  _rotationOffset: {x: 0, y: -84.9, z: 0}
   _rotationSmoothTime: 0.3
   _playerTransform: {fileID: 876927998}
 --- !u!1 &1473774121
@@ -12723,7 +12740,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e58fe77cda71cf942b46e87aa471dbaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _waypointType: 0
+  _waypointType: 3
   _normalColor: {r: 1, g: 1, b: 1, a: 1}
   _spawnColor: {r: 0, g: 1, b: 0, a: 1}
   _endColor: {r: 1, g: 0, b: 1, a: 1}
